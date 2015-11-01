@@ -197,4 +197,3 @@ nsNetworkManagerListener::UpdateNetworkStatus(DBusMessage* msg) {
 
   NotifyNetworkStatusObservers();
 }
-

@@ -40,6 +40,7 @@ let ss = Cc["@mozilla.org/browser/sessionstore;1"].
 
 let stateBackup = ss.getBrowserState();
 
+
 function test() {
   /** Test for bug 581593 **/
   waitForExplicitFinish();
@@ -85,3 +86,4 @@ function cleanup() {
   ss.setBrowserState(stateBackup);
   executeSoon(finish);
 }
+

@@ -524,6 +524,7 @@ TypeError(JSContext* cx, const char* expected, jsval actual)
     JS_ClearPendingException(cx);
     src = "<<error converting value to string>>";
   }
+
   JS_ReportErrorNumber(cx, GetErrorMessage, NULL,
                        CTYPESMSG_TYPE_ERROR, expected, src);
   return false;

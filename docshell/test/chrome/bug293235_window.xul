@@ -110,6 +110,7 @@
         },
       };
       os.addObserver(visitObserver, "uri-visit-saved", false);
+
       // Load the page that the link on the previous page points to.
       doPageNavigation({
         uri: getHttpUrl("bug293235_p2.html"),

@@ -393,6 +393,7 @@ nsJARChannel::EnsureJarInput(PRBool blocking)
                             mLoadGroup, mCallbacks,
                             mLoadFlags & ~(LOAD_DOCUMENT_URI | LOAD_CALL_CONTENT_SNIFFERS));
     }
+
     return rv;
 
 }

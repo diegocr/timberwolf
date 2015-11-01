@@ -272,6 +272,7 @@ bool Surface::checkForOutOfDateSwapChain()
 
         return true;
     }
+
     return false;
 }
 

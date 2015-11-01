@@ -761,11 +761,11 @@ sym(vp8_mbloop_filter_horizontal_edge_uv_sse2):
         movdqa      xmm5,               xmm2            ; 97 87 96 86 95 85 94 84 93 83 92 82 91 81 90 80
 
         punpcklwd   xmm5,               xmm0            ; b3 a3 93 83 b2 a2 92 82 b1 a1 91 81 b0 a0 90 80
-
         punpckhwd   xmm2,               xmm0            ; b7 a7 97 87 b6 a6 96 86 b5 a5 95 85 b4 a4 94 84
 
         movdqa      xmm0,               xmm5
         punpckldq   xmm0,               xmm1            ; f1 e1 d1 c1 b1 a1 91 81 f0 e0 d0 c0 b0 a0 90 80
+
 
         punpckhdq   xmm5,               xmm1            ; f3 e3 d3 c3 b3 a3 93 83 f2 e2 d2 c2 b2 a2 92 82
         movdqa      xmm1,               xmm2            ; b7 a7 97 87 b6 a6 96 86 b5 a5 95 85 b4 a4 94 84
@@ -783,14 +783,12 @@ sym(vp8_mbloop_filter_horizontal_edge_uv_sse2):
         punpcklqdq  xmm2,               xmm5            ; f2 e2 d2 c2 b2 a2 92 82 72 62 52 42 32 22 12 02
 
         punpckhqdq  xmm3,               xmm5            ; f3 e3 d3 c3 b3 a3 93 83 73 63 53 43 33 23 13 03
-
         movdqa      [rdx],              xmm2            ; save 2
 
         movdqa      xmm5,               xmm4            ; 75 65 55 45 35 25 15 05 74 64 54 44 34 24 14 04
         punpcklqdq  xmm4,               xmm1            ; f4 e4 d4 c4 b4 a4 94 84 74 64 54 44 34 24 14 04
 
         movdqa      [rdx+16],           xmm3            ; save 3
-
         punpckhqdq  xmm5,               xmm1            ; f5 e5 d5 c5 b5 a5 95 85 75 65 55 45 35 25 15 05
 
         movdqa      [rdx+32],           xmm4            ; save 4
@@ -817,7 +815,6 @@ sym(vp8_mbloop_filter_horizontal_edge_uv_sse2):
         punpcklqdq  xmm4,               xmm1            ; f4 e4 d4 c4 b4 a4 94 84 74 64 54 44 34 24 14 04
 
         movdqa      [rdx+48],           xmm3            ; save 3
-
         punpckhqdq  xmm5,               xmm1            ; f5 e5 d5 c5 b5 a5 95 85 75 65 55 45 35 25 15 05
 
         movdqa      [rdx+64],           xmm4            ; save 4
@@ -830,7 +827,6 @@ sym(vp8_mbloop_filter_horizontal_edge_uv_sse2):
         punpcklqdq  xmm2,               xmm0            ; f0 e0 d0 c0 b0 a0 90 80 70 60 50 40 30 20 10 00
 
         movdqa      [rdx+16],           xmm1
-
         movdqa      [rdx],              xmm2
 %endif
 %endmacro
@@ -967,7 +963,6 @@ sym(vp8_mbloop_filter_horizontal_edge_uv_sse2):
         punpckhbw   xmm1,               xmm6            ; f3 f2 e3 e2 d3 d2 c3 c2 b3 b2 a3 a2 93 92 83 82
 
         punpcklbw   xmm4,               xmm7            ; 75 74 65 64 55 54 45 44 35 34 25 24 15 14 05 04
-
         punpckhbw   xmm3,               xmm7            ; f5 f4 e5 e4 d5 d4 c5 c4 b5 b4 a5 a4 95 94 85 84
 
         movdqa      xmm6,               xmm2            ; 73 72 63 62 53 52 43 42 33 32 23 22 13 12 03 02
@@ -977,7 +972,6 @@ sym(vp8_mbloop_filter_horizontal_edge_uv_sse2):
         movdqa      xmm5,               xmm1            ; f3 f2 e3 e2 d3 d2 c3 c2 b3 b2 a3 a2 93 92 83 82
 
         punpcklwd   xmm1,               xmm3            ; b5 b4 b3 b2 a5 a4 a3 a2 95 94 93 92 85 84 83 82
-
         punpckhwd   xmm5,               xmm3            ; f5 f4 f3 f2 e5 e4 e3 e2 d5 d4 d3 d2 c5 c4 c3 c2
         ; xmm2 = 35 34 33 32 25 24 23 22 15 14 13 12 05 04 03 02
         ; xmm6 = 75 74 73 72 65 64 63 62 55 54 53 52 45 44 43 42

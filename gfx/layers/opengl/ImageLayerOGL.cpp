@@ -326,6 +326,7 @@ ImageContainerOGL::GetCurrentSize()
       return gfxIntSize(0,0);
     }
     return yuvImage->mSize;
+
   }
 
   if (mActiveImage->GetFormat() == Image::CAIRO_SURFACE) {

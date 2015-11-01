@@ -619,6 +619,7 @@ Item.prototype = {
           var box = self.getBounds();
           box.left = startPos.x + (mouse.x - startMouse.x);
           box.top = startPos.y + (mouse.y - startMouse.y);
+
           self.setBounds(box, true);
 
           if (typeof self.dragOptions.drag == "function")

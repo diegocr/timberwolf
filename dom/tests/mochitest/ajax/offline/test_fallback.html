@@ -35,6 +35,7 @@ function onFallbackLoad(fallbackIdentification)
       OfflineTest.ok(!gChildLoad, "offline child not load before cache update");
       gChildLoad = true;
       // no break
+
     case 101:
       OfflineTest.is(fallbackIdentification, 1, "fallback for namespace1/ in step " + gStep);
 
@@ -73,10 +74,10 @@ function onFallbackLoad(fallbackIdentification)
       // Try all over again. This checks there are no entries for non-existing
       // pages created/leaked. That would prevent fallback load.
       gStep = 100;
-
       fallbackFrame.location = "http://mochi.test:8888/tests/dom/tests/mochitest/ajax/offline/namespace1/non-existing.html";
       // Invokes load of fallback1.html, again, from the start
       // no break
+
     case 105:
       OfflineTest.is(fallbackIdentification, 100, "fallback for namespace2/, invoked by a top level document " + gStep);
 

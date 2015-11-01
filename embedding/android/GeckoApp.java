@@ -333,6 +333,7 @@ abstract public class GeckoApp
     @Override
     public void onPause()
     {
+
         Log.i("GeckoApp", "pause");
         GeckoAppShell.sendEventToGecko(new GeckoEvent(GeckoEvent.ACTIVITY_PAUSING));
         // The user is navigating away from this activity, but nothing

@@ -3855,4 +3855,3 @@ nsCookieService::UpdateCookieInList(nsCookie                      *aCookie,
     NS_ASSERT_SUCCESS(rv);
   }
 }
-

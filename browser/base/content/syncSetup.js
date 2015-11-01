@@ -938,6 +938,7 @@ var gSyncSetup = {
     this._setFeedback(element, success, str);
   },
 
+
   onStateChange: function(webProgress, request, stateFlags, status) {
     // We're only looking for the end of the frame load
     if ((stateFlags & Ci.nsIWebProgressListener.STATE_STOP) == 0)

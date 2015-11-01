@@ -2037,6 +2037,7 @@ gfxFontGroup::FindPlatformFont(const nsAString& aName,
     gfxFontGroup *fontGroup = static_cast<gfxFontGroup*>(aClosure);
     const gfxFontStyle *fontStyle = fontGroup->GetStyle();
 
+
     PRBool needsBold;
     gfxFontEntry *fe = nsnull;
 

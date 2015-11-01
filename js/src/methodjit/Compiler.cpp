@@ -3151,7 +3151,6 @@ mjit::Compiler::jsop_callprop_generic(JSAtom *atom)
     masm.orPtr(pic.objReg, pic.typeReg);
     masm.storePtr(pic.typeReg, thisv);
 #endif
-
     frame.freeReg(pic.typeReg);
 
     /* Guard on shape. */

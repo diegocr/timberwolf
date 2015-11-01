@@ -139,7 +139,6 @@ function updateMemoryStatus()
         mo.removeChild(mo.lastChild);
 
     var otherCount = 0;
-
     for each (var rep in gMemReporters) {
         var row = makeTableRow([rep.path, rep.description],
                                makeTableCell(formatNumber(rep.memoryUsed), "memValue"));

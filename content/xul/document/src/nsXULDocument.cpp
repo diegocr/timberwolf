@@ -3344,6 +3344,7 @@ nsXULDocument::ReportMissingOverlay(nsIURI* aURI)
 
     NS_ConvertUTF8toUTF16 utfSpec(spec);
     const PRUnichar* params[] = { utfSpec.get() };
+
     nsContentUtils::ReportToConsole(nsContentUtils::eXUL_PROPERTIES,
                                     "MissingOverlay",
                                     params, NS_ARRAY_LENGTH(params),

@@ -1120,6 +1120,7 @@ DOMStorageImpl::GetLength(bool aCallerSecure, PRUint32* aLength)
   mItems.EnumerateEntries(ItemCounter, &state);
 
   *aLength = state.mCount;
+
   return NS_OK;
 }
 
@@ -1182,6 +1183,7 @@ DOMStorageImpl::GetKey(bool aCallerSecure, PRUint32 aIndex, nsAString& aKey)
   }
 
   aKey = data.mItem->GetKey();
+
   return NS_OK;
 }
 
@@ -1219,6 +1221,7 @@ DOMStorageImpl::GetValue(bool aCallerSecure, const nsAString& aKey,
       *aResult = NS_ERROR_OUT_OF_MEMORY;
     }
   }
+
   return item;
 }
 

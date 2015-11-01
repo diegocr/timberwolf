@@ -225,6 +225,7 @@ interface nsIFrameLoader : nsISupports
   void scrollViewportTo(in float xPx, in float yPx);
   void scrollViewportBy(in float dxPx, in float dyPx);
   void setViewportScale(in float xScale, in float yScale);
+
   readonly attribute float viewportScrollX;
   readonly attribute float viewportScrollY;
 };

@@ -349,7 +349,6 @@ nsNPAPIPlugin::RunPluginOOP(const nsPluginTag *aPluginTag)
         return PR_FALSE;
       }
     }
-
     // At this point we have Flash 10.1+ but now we also need to blacklist
     // if the machine has a Intel GMA9XX GPU.
     if (GMA9XXGraphics()) {

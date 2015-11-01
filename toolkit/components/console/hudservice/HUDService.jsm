@@ -2179,7 +2179,6 @@ HUD_SERVICE.prototype =
 
             // The httpActivity object will hold all information concerning
             // this request and later response.
-
             let httpActivity = {
               id: self.sequenceId(),
               hudId: hudId,
@@ -3047,7 +3046,6 @@ function HeadsUpDisplay(aConfig)
 }
 
 HeadsUpDisplay.prototype = {
-
   /**
    * L10N shortcut function
    *
@@ -3193,9 +3191,9 @@ HeadsUpDisplay.prototype = {
 
     this.jsTermParentNode = outerWrap;
     this.HUDBox.appendChild(outerWrap);
-
     return this.HUDBox;
   },
+
 
   /**
    * sets the click events for all binary toggle filter buttons
@@ -4056,7 +4054,6 @@ JSTerm.prototype = {
   {
     return this.context.get().QueryInterface(Ci.nsIDOMWindowInternal);
   },
-
   /**
    * Evaluates a string in the sandbox. The string is currently wrapped by a
    * with(window) { aString } construct, see bug 574033.

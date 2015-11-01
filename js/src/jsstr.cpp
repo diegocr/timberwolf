@@ -2941,7 +2941,6 @@ tagify(JSContext *cx, const char *begin, JSLinearString *param, const char *end,
         tagbuf[j++] = '"';
     }
     tagbuf[j++] = '>';
-
     js_strncpy(&tagbuf[j], str->chars(), str->length());
     j += str->length();
     tagbuf[j++] = '<';

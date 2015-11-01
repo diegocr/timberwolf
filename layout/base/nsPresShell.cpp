@@ -6860,7 +6860,7 @@ PresShell::HandlePositionedEvent(nsIView*       aView,
                                  nsEventStatus* aEventStatus)
 {
   nsresult rv = NS_OK;
-  
+
   PushCurrentEventInfo(nsnull, nsnull);
   
   mCurrentEventFrame = aTargetFrame;

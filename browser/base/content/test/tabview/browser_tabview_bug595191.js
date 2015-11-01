@@ -53,6 +53,7 @@ function toggleTabViewTest(contentWindow) {
     contentWindow.removeEventListener("tabviewhidden", onTabViewHidden, false);
 
     ok(!TabView.isVisible(), "Tab View is hidden");
+
     finish();
   }
   contentWindow.addEventListener("tabviewhidden", onTabViewHidden, false);

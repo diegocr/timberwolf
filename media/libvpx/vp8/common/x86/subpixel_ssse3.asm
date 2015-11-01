@@ -267,6 +267,7 @@ filter_block1d16_h6_rowloop_ssse3:
     dec         rcx
     jnz         filter_block1d16_h6_rowloop_ssse3
 
+
     ; begin epilog
     pop rdi
     pop rsi

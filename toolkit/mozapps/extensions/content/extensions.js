@@ -1430,6 +1430,7 @@ var gCategories = {
     gPendingInitializations += this._maybeHidden.length;
     this._maybeHidden.forEach(function(aId) {
       var type = gViewController.parseViewId(aId).param;
+
       getAddonsAndInstalls(type, function(aAddonsList, aInstallsList) {
         var hidden = (aAddonsList.length == 0 && aInstallsList.length == 0);
         var item = self.get(aId);
@@ -2199,7 +2200,7 @@ var gListView = {
         return;
 
       var elements = [];
-
+      
       for (let i = 0; i < aAddonsList.length; i++)
         elements.push(createItem(aAddonsList[i]));
 
@@ -2207,17 +2208,16 @@ var gListView = {
         elements.push(createItem(aInstallsList[i], true));
 
       self.showEmptyNotice(elements.length == 0);
-      if (elements.length > 0) {
-        sortElements(elements, ["uiState", "name"], true);
-        elements.forEach(function(aElement) {
+      if (elements.length > 0) { 	
+        sortElements(elements, ["uiState", "name"], true);    
+        elements.forEach(function(aElement) {     	
           self._listBox.appendChild(aElement);
         });
       }
-
-      gEventManager.registerInstallListener(self);
-      gViewController.updateCommands();
-      gViewController.notifyViewChanged();
-    });
+      gEventManager.registerInstallListener(self);  
+      gViewController.updateCommands();  
+      gViewController.notifyViewChanged();  
+    }); 
   },
 
   hide: function() {

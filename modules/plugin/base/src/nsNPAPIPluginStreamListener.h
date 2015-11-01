@@ -151,7 +151,6 @@ public:
   nsNPAPIPluginStreamListener(nsNPAPIPluginInstance* inst, void* notifyData,
                               const char* aURL);
   virtual ~nsNPAPIPluginStreamListener();
-
   PRBool IsStarted();
   nsresult CleanUpStream(NPReason reason);
   void CallURLNotify(NPReason reason);

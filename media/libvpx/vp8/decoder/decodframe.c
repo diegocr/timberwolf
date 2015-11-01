@@ -293,7 +293,6 @@ void vp8_decode_macroblock(VP8D_COMP *pbi, MACROBLOCKD *xd)
                      xd->dst.uv_stride, xd->eobs+16);
 }
 
-
 static int get_delta_q(vp8_reader *bc, int prev, int *q_update)
 {
     int ret_val = 0;

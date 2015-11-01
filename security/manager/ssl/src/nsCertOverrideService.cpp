@@ -919,4 +919,3 @@ nsCertOverrideService::GetHostWithPort(const nsACString & aHostName, PRInt32 aPo
   }
   _retval.Assign(hostPort);
 }
-

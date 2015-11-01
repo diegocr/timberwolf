@@ -257,4 +257,5 @@ function test_encrypt_decrypt() {
     failure = true;
   }
   do_check_true(failure);
+
 }

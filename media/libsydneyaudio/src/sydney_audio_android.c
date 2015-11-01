@@ -263,6 +263,7 @@ sa_stream_destroy(sa_stream_t *s) {
 }
 
 
+
 /*
  * -----------------------------------------------------------------------------
  * Data read and write functions
@@ -450,6 +451,7 @@ sa_stream_drain(sa_stream_t *s)
 
   return SA_SUCCESS;
 }
+
 
 
 /*

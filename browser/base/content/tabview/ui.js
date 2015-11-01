@@ -280,6 +280,7 @@ let UI = {
     this._cleanupFunctions.forEach(function(func) {
       func();
     });
+
     this._cleanupFunctions = [];
 
     // additional clean up

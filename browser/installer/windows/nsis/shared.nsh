@@ -124,7 +124,6 @@
   ${StrFilter} "${FileMainEXE}" "+" "" "" $0
   StrCpy $R1 "Software\Clients\StartMenuInternet\$0\InstallInfo"
   WriteRegDWORD HKLM "$R1" "IconsVisible" 0
-
   SetShellVarContext all  ; Set $DESKTOP to All Users
   ${Unless} ${FileExists} "$DESKTOP\${BrandFullName}.lnk"
     SetShellVarContext current  ; Set $DESKTOP to the current user's desktop

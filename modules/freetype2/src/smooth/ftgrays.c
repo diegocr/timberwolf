@@ -1119,6 +1119,7 @@ typedef ptrdiff_t  FT_PtrDist;
   }
 
 
+
   static int
   gray_move_to( const FT_Vector*  to,
                 PWorker           worker )

@@ -104,7 +104,6 @@ function runTests() {
     SimpleTest.finish();
     return;
   }
-
   // the test harness will have set MOZ_CRASHREPORTER_NO_REPORT,
   // ensure that we can change the setting and have our minidumps
   // wind up in Crash Reports/pending

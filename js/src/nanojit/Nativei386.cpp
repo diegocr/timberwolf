@@ -2083,7 +2083,9 @@ namespace nanojit
         }
 
         RegisterMask allow = ins->isD() ? XmmRegs : GpRegs;
+
         Register rr = prepareResultReg(ins, allow);
+
         Register rf = findRegFor(iffalse, allow & ~rmask(rr));
 
         if (ins->isop(LIR_cmovd)) {
@@ -2131,6 +2133,7 @@ namespace nanojit
 
         // If 'iftrue' isn't in a register, it can be clobbered by 'ins'.
         Register rt = iftrue->isInReg() ? iftrue->getReg() : rr;
+
         NanoAssert(ins->isop(LIR_cmovi));
 
         // WARNING: We cannot generate any code that affects the condition
@@ -2723,6 +2726,7 @@ namespace nanojit
                 condop = LIR_ged;
                 LIns* t = lhs; lhs = rhs; rhs = t;
             }
+
 
             // LIR_eqd, if lhs == rhs:
             //   ucomisd       ZPC   outcome (SETNP/JNP succeeds if P==0)

@@ -292,6 +292,7 @@ function runTest() {
   ok(iframeCw.location.toString().match(/file_bug500328_1.html$/),
       "Going forward to page 1 should leave us at original page.");
 
+
   statusMsg("About to go forward to page 2.");
   iframeCw.history.forward();
   statusMsg("Awake after going forward to page 2.");
@@ -733,6 +734,7 @@ function runTest() {
   ok(iframeCw.document.referrer.toString().match(/newpage2.html$/),
      "Wrong referrer after replaceState.  Expected newpage2.html, but was " +
      iframeCw.document.referrer);
+
 
   /*
    * Set up a cycle with the popstate event to make sure it's properly

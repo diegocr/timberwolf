@@ -230,7 +230,6 @@ void vp8mt_decode_macroblock(VP8D_COMP *pbi, MACROBLOCKD *xd, int mb_row, int mb
 #endif
 }
 
-
 THREAD_FUNCTION vp8_thread_decoding_proc(void *p_data)
 {
 #if CONFIG_MULTITHREAD

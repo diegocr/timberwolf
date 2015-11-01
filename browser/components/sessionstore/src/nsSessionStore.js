@@ -3196,7 +3196,7 @@ SessionStoreService.prototype = {
         aWindow.gURLBar.setAttribute("enablehistory", "true");
       }
     }
-
+    
     var _this = this;
     aWindow.setTimeout(function() {
       _this.restoreDimensions.apply(_this, [aWindow, aWinData.width || 0, 

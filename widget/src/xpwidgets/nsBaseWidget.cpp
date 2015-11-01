@@ -283,6 +283,7 @@ nsBaseWidget::CreateChild(const nsIntRect  &aRect,
     widget = do_CreateInstance(kCChildCID);
   }
 
+
   if (widget &&
       NS_SUCCEEDED(widget->Create(parent, nativeParent, aRect,
                                   aHandleEventFunction,

@@ -366,7 +366,6 @@ nsresult nsTreeWalker::FirstChildInternal(PRBool aReversed, nsIDOMNode **_retval
                 node = sibling;
                 break;
             }
-
             nsINode *parent = node->GetNodeParent();
 
             if (!parent || parent == mRoot || parent == mCurrentNode) {
@@ -389,6 +388,7 @@ nsresult nsTreeWalker::FirstChildInternal(PRBool aReversed, nsIDOMNode **_retval
  * @returns         Errorcode
  */
 nsresult nsTreeWalker::NextSiblingInternal(PRBool aReversed, nsIDOMNode **_retval)
+
 {
     nsresult rv;
     PRInt16 filtered;

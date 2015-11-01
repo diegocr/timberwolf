@@ -240,6 +240,7 @@ Layer::CanUseOpaqueSurface()
     parent->CanUseOpaqueSurface();
 }
 
+
 #ifdef MOZ_IPC
 // NB: eventually these methods will be defined unconditionally, and
 // can be moved into Layers.h

@@ -3504,7 +3504,6 @@ int main(int argc, char **argv)
         goto print_usage;
     }
 
-
     if (bltest.commands[cmd_Sign].activated)
 	bltest.commands[cmd_Encrypt].activated = PR_TRUE;
     if (bltest.commands[cmd_Verify].activated)

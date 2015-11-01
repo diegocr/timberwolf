@@ -837,5 +837,6 @@ public abstract class MetaScanner {
      * @throws SAXException
      */
     protected abstract boolean tryCharset(String encoding) throws SAXException;
+
     
 }

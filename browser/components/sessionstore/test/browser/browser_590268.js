@@ -42,6 +42,7 @@ let ss = Cc["@mozilla.org/browser/sessionstore;1"].
 
 let stateBackup = ss.getBrowserState();
 
+
 function test() {
   /** Test for Bug 590268 - Provide access to sessionstore tab data sooner **/
   waitForExplicitFinish();
@@ -175,3 +176,4 @@ function test() {
 function r() {
   return "" + Date.now() + Math.random();
 }
+

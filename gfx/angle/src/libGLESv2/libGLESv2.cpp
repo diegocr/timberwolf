@@ -1032,7 +1032,6 @@ void __stdcall glCopyTexImage2D(GLenum target, GLint level, GLenum internalforma
             }
 
             gl::Framebuffer *framebuffer = context->getReadFramebuffer();
-
             if (framebuffer->completeness() != GL_FRAMEBUFFER_COMPLETE)
             {
                 return error(GL_INVALID_FRAMEBUFFER_OPERATION);

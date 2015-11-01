@@ -333,7 +333,6 @@ nsHTMLCanvasElement::ToDataURLImpl(const nsAString& aMimeType,
                                    nsAString& aDataURL)
 {
   bool fallbackToPNG = false;
-
   PRUint32 imgSize = 0;
   char* imgData;
 

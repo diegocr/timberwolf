@@ -65,6 +65,7 @@ protected:
 	PRBool mTrackingMouseMove;	
 	nsIntPoint mLastPoint;
 
+
 }; // class nsTitleBarFrame
 
 #endif /* nsTitleBarFrame_h___ */

@@ -1031,7 +1031,6 @@ Compiler::compileScript(JSContext *cx, JSObject *scopeChain, JSStackFrame *calle
 
         if (!js_EmitTree(cx, &cg, pn))
             goto out;
-
 #if JS_HAS_XML_SUPPORT
         if (PN_TYPE(pn) != TOK_SEMI ||
             !pn->pn_kid ||
@@ -1109,12 +1108,10 @@ Compiler::compileScript(JSContext *cx, JSObject *scopeChain, JSStackFrame *calle
      */
     if (js_Emit1(cx, &cg, JSOP_STOP) < 0)
         goto out;
-
 #ifdef METER_PARSENODES
     printf("Code-gen growth: %d (%u bytecodes, %u srcnotes)\n",
            (char *)sbrk(0) - (char *)before, CG_OFFSET(&cg), cg.noteCount);
 #endif
-
 #ifdef JS_ARENAMETER
     JS_DumpArenaStats(stdout);
 #endif

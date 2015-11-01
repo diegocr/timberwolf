@@ -963,7 +963,6 @@ WebGLContext::DeleteRenderbuffer(nsIWebGLRenderbuffer *rbobj)
     */
 
     gl->fDeleteRenderbuffers(1, &rbufname);
-
     rbuf->Delete();
     mMapRenderbuffers.Remove(rbufname);
 
@@ -3653,7 +3652,6 @@ WebGLContext::CompileShader(nsIWebGLShader *sobj)
     WebGLuint shadername;
     if (!GetConcreteObjectAndGLName("compileShader", sobj, &shader, &shadername))
         return NS_OK;
-
     MakeContextCurrent();
 
 #if defined(USE_ANGLE)

@@ -283,6 +283,7 @@ __asm__ (
 
   /* back to AT&T syntax */
   ".att_syntax\n"
+
 );
 
 #define STUB_ENTRY(n) \

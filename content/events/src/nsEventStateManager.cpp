@@ -2083,6 +2083,7 @@ nsEventStateManager::GenerateDragGesture(nsPresContext* aPresContext,
 
       nsDragEvent* event = &startEvent;
       if (status != nsEventStatus_eConsumeNoDefault) {
+
         status = nsEventStatus_eIgnore;
         nsEventDispatcher::Dispatch(targetContent, aPresContext, &gestureEvent, nsnull,
                                     &status);
@@ -2106,7 +2107,6 @@ nsEventStateManager::GenerateDragGesture(nsPresContext* aPresContext,
       // Note that frame event handling doesn't care about NS_DRAGDROP_GESTURE,
       // which is just as well since we don't really know which frame to
       // send it to
-
       // Reset mCurretTargetContent to what it was
       mCurrentTargetContent = targetBeforeEvent;
     }
@@ -2115,6 +2115,7 @@ nsEventStateManager::GenerateDragGesture(nsPresContext* aPresContext,
     // while dragging.
     FlushPendingEvents(aPresContext);
   }
+
 } // GenerateDragGesture
 
 void

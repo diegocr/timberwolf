@@ -1091,6 +1091,7 @@ intel_aes_decrypt_cbc_192:
 	ret
 	.size intel_aes_decrypt_cbc_192, .-intel_aes_decrypt_cbc_192
 
+
 /* in %rdi : the key
    in %rsi : buffer for expanded key
 */

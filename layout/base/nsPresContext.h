@@ -868,6 +868,7 @@ public:
   PRBool IsDOMPaintEventPending() {
     return !mInvalidateRequests.mRequests.IsEmpty();
   }
+
   void ClearMozAfterPaintEvents() {
     mInvalidateRequests.mRequests.Clear();
   }

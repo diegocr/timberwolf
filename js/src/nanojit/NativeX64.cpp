@@ -1190,7 +1190,6 @@ namespace nanojit
 
             if (rr != rt)
                 asm_nongp_copy(rr, rt);
-
             freeResourcesOf(ins);
             if (!iftrue->isInReg()) {
                 NanoAssert(rt == rr);

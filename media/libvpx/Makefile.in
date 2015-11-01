@@ -181,7 +181,6 @@ CSRCS += \
 ifdef VPX_X86_ASM
 # Building on an x86 platform with a supported assembler, include
 # the optimized assembly in the build.
-
 CSRCS += \
   idct_blk_mmx.c \
   idct_blk_sse2.c \

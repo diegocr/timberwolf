@@ -183,7 +183,6 @@ void _PR_UnblockLockWaiter(PRLock *lock)
 
 /************************************************************************/
 
-
 PR_IMPLEMENT(PRLock*) PR_NewLock(void)
 {
     PRLock *lock;

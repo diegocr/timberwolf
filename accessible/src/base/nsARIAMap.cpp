@@ -38,7 +38,6 @@
  * ***** END LICENSE BLOCK ***** */
 
 #include "nsARIAMap.h"
-
 #include "nsIAccessibleRole.h"
 #include "nsIAccessibleStates.h"
 

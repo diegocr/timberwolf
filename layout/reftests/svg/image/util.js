@@ -151,7 +151,6 @@ function generateUseElementForParams(aTargetURI, aX, aY, aWidth, aHeight) {
   use.setAttribute("height", aHeight);
   return use;
 }
-
 // Returns a <g> element filled with a grid of <use> elements which each
 // have the specified aWidth & aHeight and which reference <symbol> elements
 // with all possible values of preserveAspectRatio.  Each <symbol> contains

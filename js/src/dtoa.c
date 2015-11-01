@@ -171,9 +171,11 @@ typedef unsigned Long ULong;
 #include "stdlib.h"
 #include "string.h"
 
+
 #ifdef USE_LOCALE
 #include "locale.h"
 #endif
+
 
 #ifdef MALLOC
 #ifdef KR_headers

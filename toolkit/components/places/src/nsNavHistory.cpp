@@ -1075,6 +1075,7 @@ nsNavHistory::CheckAndUpdateGUIDs()
   return NS_OK;
 }
 
+
 NS_IMETHODIMP
 nsNavHistory::GetDatabaseStatus(PRUint16 *aDatabaseStatus)
 {
@@ -2470,7 +2471,6 @@ nsNavHistory::GetHasHistoryEntries(PRBool* aHasEntries)
   mHasHistoryEntries = *aHasEntries ? 1 : 0;
   return NS_OK;
 }
-
 
 nsresult
 nsNavHistory::FixInvalidFrecenciesForExcludedPlaces()

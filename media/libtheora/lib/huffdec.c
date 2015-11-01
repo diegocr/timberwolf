@@ -460,7 +460,6 @@ void oc_huff_trees_clear(ogg_int16_t *_nodes[TH_NHUFFMAN_TABLES]){
   for(i=0;i<TH_NHUFFMAN_TABLES;i++)_ogg_free(_nodes[i]);
 }
 
-
 /*Unpacks a single token using the given Huffman tree.
   _opb:  The buffer to unpack the token from.
   _node: The tree to unpack the token with.

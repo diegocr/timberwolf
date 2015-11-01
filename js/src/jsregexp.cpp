@@ -139,7 +139,6 @@ js_CloneRegExpObject(JSContext *cx, JSObject *obj, JSObject *proto)
     JS_ASSERT(obj->getClass() == &js_RegExpClass);
     JS_ASSERT(proto);
     JS_ASSERT(proto->getClass() == &js_RegExpClass);
-
     JSObject *clone = NewNativeClassInstance(cx, &js_RegExpClass, proto, proto->getParent());
     if (!clone)
         return NULL;
@@ -864,7 +863,6 @@ static JSBool
 regexp_construct(JSContext *cx, uintN argc, Value *vp)
 {
     Value *argv = JS_ARGV(cx, vp);
-
     if (!IsConstructing(vp)) {
         /*
          * If first arg is regexp and no flags are given, just return the arg.

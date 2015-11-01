@@ -458,6 +458,7 @@ class Context
     BindingPointer<Texture2D> mTexture2DZero;
     BindingPointer<TextureCubeMap> mTextureCubeMapZero;
 
+
     typedef std::map<GLuint, Framebuffer*> FramebufferMap;
     FramebufferMap mFramebufferMap;
 

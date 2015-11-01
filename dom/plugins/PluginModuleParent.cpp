@@ -754,7 +754,6 @@ PluginModuleParent::NP_Initialize(NPNetscapeFuncs* bFuncs, NPPluginFuncs* pFuncs
     }
 
     SetPluginFuncs(pFuncs);
-
     return NS_OK;
 }
 #else

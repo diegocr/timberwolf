@@ -119,7 +119,6 @@ public:
       return true;
     }
 
-
     void LoadURL(nsIURI* aURI);
     // XXX/cjones: it's not clear what we gain by hiding these
     // message-sending functions under a layer of indirection and

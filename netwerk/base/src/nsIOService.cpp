@@ -568,7 +568,7 @@ nsIOService::NewFileURI(nsIFile *file, nsIURI **result)
 
     nsCOMPtr<nsIFileProtocolHandler> fileHandler( do_QueryInterface(handler, &rv) );
     if (NS_FAILED(rv)) return rv;
-    
+
     return fileHandler->NewFileURI(file, result);
 }
 
@@ -615,7 +615,7 @@ nsIOService::NewChannelFromURI(nsIURI *aURI, nsIChannel **result)
                 rv = GetProtocolHandler("http", getter_AddRefs(handler));
                 if (NS_FAILED(rv))
                     return rv;
-            }
+            }  
             nsCOMPtr<nsIProxiedProtocolHandler> pph = do_QueryInterface(handler);
             if (pph)
                 return pph->NewProxiedChannel(aURI, pi, result);

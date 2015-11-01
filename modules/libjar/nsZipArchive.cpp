@@ -285,6 +285,7 @@ nsresult nsZipArchive::OpenArchive(nsZipHandle *aZipHandle)
     if (NS_SUCCEEDED(rv2))
       mLog = fd;
   }
+
   return rv;
 }
 
@@ -296,6 +297,7 @@ nsresult nsZipArchive::OpenArchive(nsIFile *aFile)
 
   nsRefPtr<nsZipHandle> handle;
   rv = nsZipHandle::Init(localFile, getter_AddRefs(handle));
+
   if (NS_FAILED(rv))
     return rv;
 

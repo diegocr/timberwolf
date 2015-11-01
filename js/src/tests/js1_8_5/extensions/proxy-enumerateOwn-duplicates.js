@@ -32,6 +32,7 @@ var ap = Object.getOwnPropertyNames(p);
 assertEq(ap.length, 1, "array: " + ap);
 assertEq(ap[0], "1");
 
+
 /******************************************************************************/
 
 if (typeof reportCompare === "function")

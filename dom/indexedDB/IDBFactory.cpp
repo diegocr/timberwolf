@@ -120,6 +120,7 @@ struct ObjectStoreInfoMap
   ObjectStoreInfo* info;
 };
 
+
 class OpenDatabaseHelper : public AsyncConnectionHelper
 {
 public:
@@ -755,6 +756,7 @@ IDBFactory::LoadDatabaseInformation(mozIStorageConnection* aConnection,
   if (version.IsVoid()) {
     version.SetIsVoid(PR_FALSE);
   }
+
   aVersion = version;
   return NS_OK;
 }

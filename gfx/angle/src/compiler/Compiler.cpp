@@ -96,8 +96,8 @@ bool TCompiler::Init(const ShBuiltInResources& resources)
     // Generate built-in symbol table.
     if (!InitBuiltInSymbolTable(resources))
         return false;
+        
     InitExtensionBehavior(resources, extensionBehavior);
-
     return true;
 }
 

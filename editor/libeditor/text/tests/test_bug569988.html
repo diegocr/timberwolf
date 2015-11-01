@@ -59,7 +59,6 @@ function onPromptFocus() {
   ok(true, "onPromptFocus is called");
   netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect');
   gPromptInput.removeEventListener("focus", onPromptFocus, false);
-
   var systemGroup =
     Components.classes["@mozilla.org/eventlistenerservice;1"].
       getService(Components.interfaces.nsIEventListenerService).

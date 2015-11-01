@@ -740,10 +740,9 @@ nsFormFillController::Focus(nsIDOMEvent* aEvent)
   // Drop untrusted events from content
   if (!IsEventTrusted(aEvent))
     return NS_OK;
-
   nsCOMPtr<nsIDOMEventTarget> target;
   aEvent->GetTarget(getter_AddRefs(target));
-  
+
   nsCOMPtr<nsIDOMHTMLInputElement> input = do_QueryInterface(target);
   if (!input)
     return NS_OK;
@@ -764,7 +763,7 @@ nsFormFillController::Focus(nsIDOMEvent* aEvent)
       !isReadOnly || isPwmgrInput) {
     StartControllingInput(input);
   }
-    
+
   return NS_OK;
 }
 
@@ -1264,12 +1263,14 @@ nsFormFillController::RemoveKeyListener()
 void
 nsFormFillController::StartControllingInput(nsIDOMHTMLInputElement *aInput)
 {
+
   // Make sure we're not still attached to an input
   StopControllingInput(); 
 
   // Find the currently focused docShell
   nsCOMPtr<nsIDocShell> docShell = GetDocShellForInput(aInput);
   PRInt32 index = GetIndexOfDocShell(docShell);
+
   if (index < 0)
     return;
   

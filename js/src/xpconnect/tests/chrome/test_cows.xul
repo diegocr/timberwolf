@@ -223,6 +223,7 @@ function COWTests() {
         ok(/Permission denied/.test(e),
            "writing to a read-only exposed prop should fail");
     }
+
     try {
         delete getCOW(readable).foo;
         ok(false, "deleting a read-only exposed prop shouldn't work");

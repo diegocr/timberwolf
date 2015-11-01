@@ -234,6 +234,7 @@ nsFocusManager::Observe(nsISupports *aSubject,
         nsContentUtils::GetBoolPref("accessibility.mouse_focuses_formcontrol", PR_FALSE);
     }
   } else if (!nsCRT::strcmp(aTopic, "xpcom-shutdown")) {
+
     mActiveWindow = nsnull;
     mFocusedWindow = nsnull;
     mFocusedContent = nsnull;
@@ -1051,8 +1052,7 @@ nsFocusManager::SetFocusInner(nsIContent* aNewContent, PRInt32 aFlags,
     // caret position isn't updated.
     aFocusChanged = PR_FALSE;
   }
-
-  // unless it was set above, retrieve the window for the element to focus
+   // unless it was set above, retrieve the window for the element to focus
   if (!newWindow)
     newWindow = GetCurrentWindow(contentToFocus);
 

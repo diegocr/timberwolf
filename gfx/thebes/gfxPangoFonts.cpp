@@ -851,6 +851,7 @@ gfx_pango_fc_font_init(gfxPangoFcFont *font)
 {
 }
 
+
 static void
 gfx_pango_fc_font_finalize(GObject *object)
 {

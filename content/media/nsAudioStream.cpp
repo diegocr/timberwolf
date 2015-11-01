@@ -367,7 +367,6 @@ nsresult nsAudioStreamLocal::Init(PRInt32 aNumChannels, PRInt32 aRate, SampleFor
   mRate = aRate;
   mChannels = aNumChannels;
   mFormat = aFormat;
-
   if (sa_stream_create_pcm(reinterpret_cast<sa_stream_t**>(&mAudioHandle),
                            NULL, 
                            SA_MODE_WRONLY, 
@@ -388,7 +387,6 @@ nsresult nsAudioStreamLocal::Init(PRInt32 aNumChannels, PRInt32 aRate, SampleFor
     return NS_ERROR_FAILURE;
   }
   mInError = PR_FALSE;
-
   return NS_OK;
 }
 
@@ -557,6 +555,7 @@ PRInt64 nsAudioStreamLocal::GetPosition()
   if (sampleOffset >= 0) {
     return ((MILLISECONDS_PER_SECOND * sampleOffset) / mRate / mChannels);
   }
+
   return -1;
 }
 

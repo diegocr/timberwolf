@@ -2017,3 +2017,4 @@ JSScript::copyClosedSlotsTo(JSScript *other)
 {
     memcpy(other->closedSlots, closedSlots, nClosedArgs + nClosedVars);
 }
+

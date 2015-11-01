@@ -381,6 +381,7 @@ void HandlePragma(const char **tokens, int numTokens)
             return;
         }
     } else {
+
 #ifdef PRAGMA_TABLE
         //
         // implementation specific pragma

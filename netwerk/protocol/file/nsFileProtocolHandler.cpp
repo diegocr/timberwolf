@@ -322,6 +322,7 @@ nsFileProtocolHandler::NewFileURI(nsIFile *file, nsIURI **result)
     // NOTE: the origin charset is assigned the value of the platform
     // charset by the SetFile method.
     rv = url->SetFile(file);
+
     if (NS_FAILED(rv)) return rv;
 
     return CallQueryInterface(url, result);

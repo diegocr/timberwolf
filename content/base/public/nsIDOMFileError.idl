@@ -48,3 +48,4 @@ interface nsIDOMFileError : nsISupports
 
   readonly attribute unsigned short code;
 };
+

@@ -242,6 +242,7 @@ TabParent::GetTooltipText(nsAString & aTooltipText)
   return NS_OK;
 }
 
+
 PDocumentRendererParent*
 TabParent::AllocPDocumentRenderer(const nsRect& documentRect,
                                   const gfxMatrix& transform,

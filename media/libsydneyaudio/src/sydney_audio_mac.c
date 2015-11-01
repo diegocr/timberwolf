@@ -410,6 +410,7 @@ sa_stream_write(sa_stream_t *s, const void *data, size_t nbytes) {
   return result;
 }
 
+
 static OSStatus
 audio_callback(
   void                        * arg,

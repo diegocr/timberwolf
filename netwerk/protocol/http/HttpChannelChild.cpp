@@ -1321,3 +1321,4 @@ NS_IMETHODIMP HttpChannelChild::GetHeaderTuples(RequestHeaderTuples **aHeaderTup
 //------------------------------------------------------------------------------
 
 }} // mozilla::net
+

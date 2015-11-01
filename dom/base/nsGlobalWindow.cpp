@@ -3588,6 +3588,7 @@ nsGlobalWindow::SetInnerWidth(PRInt32 aInnerWidth)
    * If caller is not chrome and the user has not explicitly exempted the site,
    * prevent setting window.innerWidth by exiting early
    */
+
   if (!CanMoveResizeWindows() || IsFrame()) {
     return NS_OK;
   }
@@ -3658,6 +3659,7 @@ nsGlobalWindow::SetInnerHeight(PRInt32 aInnerHeight)
    * If caller is not chrome and the user has not explicitly exempted the site,
    * prevent setting window.innerHeight by exiting early
    */
+
   if (!CanMoveResizeWindows() || IsFrame()) {
     return NS_OK;
   }

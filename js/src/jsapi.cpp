@@ -4846,7 +4846,6 @@ CompileUCFunctionForPrincipalsCommon(JSContext *cx, JSObject *obj,
             goto out2;
         }
     }
-
     fun = js_NewFunction(cx, NULL, NULL, 0, JSFUN_INTERPRETED, obj, funAtom);
     if (!fun)
         goto out2;
@@ -5549,6 +5548,7 @@ JS_PUBLIC_API(JSBool)
 JS_EncodeCharacters(JSContext *cx, const jschar *src, size_t srclen, char *dst, size_t *dstlenp)
 {
     size_t n;
+
     if (!dst) {
         n = js_GetDeflatedStringLength(cx, src, srclen);
         if (n == (size_t)-1) {

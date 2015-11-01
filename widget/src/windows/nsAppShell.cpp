@@ -186,6 +186,7 @@ nsAppShell::Init()
   return nsBaseAppShell::Init();
 }
 
+
 /**
  * This is some temporary code to keep track of where in memory dlls are
  * loaded. This is useful in case someone calls into a dll that has been

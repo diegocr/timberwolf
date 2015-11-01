@@ -142,6 +142,7 @@
 %idefine XMMWORD
 %idefine MMWORD
 
+
 ; PIC macros
 ;
 %if ABI_IS_32BIT

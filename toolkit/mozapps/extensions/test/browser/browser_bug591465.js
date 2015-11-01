@@ -63,7 +63,6 @@ function test() {
     permissions: 0
   }]);
 
-
   open_manager("addons://list/extension", function(aWindow) {
     gManagerWindow = aWindow;
     gContextMenu = aWindow.document.getElementById("addonitem-popup");

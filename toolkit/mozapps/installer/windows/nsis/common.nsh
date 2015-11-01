@@ -36,7 +36,6 @@
 #
 # ***** END LICENSE BLOCK *****
 
-
 ################################################################################
 # Helper defines and macros for toolkit applications
 
@@ -133,7 +132,6 @@
 !include overrides.nsh
 
 !define SHORTCUTS_LOG "shortcuts_log.ini"
-
 
 ################################################################################
 # Macros for debugging
@@ -1424,9 +1422,9 @@
   !endif
 !macroend
 
-
 ################################################################################
 # Macros for handling DLL registration
+
 
 !macro RegisterDLL DLL
 
@@ -1460,7 +1458,6 @@
 
 !define RegisterDLL `!insertmacro RegisterDLL`
 !define UnregisterDLL `!insertmacro UnregisterDLL`
-
 
 ################################################################################
 # Macros for retrieving existing install paths
@@ -6013,7 +6010,6 @@
   ${DeleteFile} "$INSTDIR\uninstall\${SHORTCUTS_LOG}"
 !macroend
 !define DeleteShortcutsLogFile "!insertmacro DeleteShortcutsLogFile"
-
 
 ################################################################################
 # Macros for managing specific Windows version features

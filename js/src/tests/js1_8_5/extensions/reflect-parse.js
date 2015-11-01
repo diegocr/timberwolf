@@ -172,7 +172,6 @@ function assertError(src, errorType) {
     throw new Error("expected " + errorType.name + " for " + uneval(src));
 }
 
-
 // general tests
 
 // NB: These are useful but for now jit-test doesn't do I/O reliably.

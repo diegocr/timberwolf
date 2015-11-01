@@ -191,7 +191,7 @@ net_ParseFileURL(const nsACString &inURL,
 
     const nsPromiseFlatCString &flatURL = PromiseFlatCString(inURL);
     const char *url = flatURL.get();
-    
+
     PRUint32 schemeBeg, schemeEnd;
     rv = net_ExtractURLScheme(flatURL, &schemeBeg, &schemeEnd, nsnull);
     if (NS_FAILED(rv)) return rv;

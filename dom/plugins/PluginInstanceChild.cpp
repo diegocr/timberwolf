@@ -2635,7 +2635,6 @@ PluginInstanceChild::PaintRectToPlatformSurface(const nsIntRect& aRect,
                                                 gfxASurface* aSurface)
 {
     UpdateWindowAttributes();
-
 #ifdef MOZ_X11
 #if (MOZ_PLATFORM_MAEMO == 5) || (MOZ_PLATFORM_MAEMO == 6)
     // On maemo5 we do support Image rendering NPAPI

@@ -57,7 +57,6 @@ let gSyncUI = {
       Services.obs.removeObserver(gSyncUI, "weave:service:ready");
     }, false);
   },
-
   initUI: function SUI_initUI() {
     let obs = ["weave:service:sync:start",
                "weave:service:sync:finish",

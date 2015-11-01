@@ -764,14 +764,14 @@ nsStandardURL::ParseURL(const char *spec, PRInt32 specLen)
         NS_WARNING("malformed url: no scheme");
     }
 #endif
-     
+
     if (mAuthority.mLen > 0) {
         rv = mParser->ParseAuthority(spec + mAuthority.mPos, mAuthority.mLen,
                                      &mUsername.mPos, &mUsername.mLen,
                                      &mPassword.mPos, &mPassword.mLen,
                                      &mHost.mPos, &mHost.mLen,
                                      &mPort);
-        if (NS_FAILED(rv)) return rv;
+       if (NS_FAILED(rv)) return rv;
 
         // Don't allow mPort to be set to this URI's default port
         if (mPort == mDefaultPort)
@@ -784,7 +784,6 @@ nsStandardURL::ParseURL(const char *spec, PRInt32 specLen)
 
     if (mPath.mLen > 0)
         rv = ParsePath(spec, mPath.mPos, mPath.mLen);
-
     return rv;
 }
 
@@ -1965,7 +1964,7 @@ nsStandardURL::GetRelativeSpec(nsIURI *uri2, nsACString &aResult)
     thisIndex = startCharPos;
     thatIndex = stdurl2->mSpec.get() + mDirectory.mPos;
 
-#ifdef XP_WIN
+#if defined(XP_WIN) && defined(XP_AMIGAOS)
     PRBool isFileScheme = SegmentIs(mScheme, "file");
     if (isFileScheme)
     {
@@ -2516,6 +2515,7 @@ nsStandardURL::SetFile(nsIFile *file)
             mFile = 0;
         }
     }
+
     return rv;
 }
 
@@ -2601,6 +2601,7 @@ nsStandardURL::Init(PRUint32 urlType,
 
     nsCAutoString buf;
     nsresult rv = baseURI->Resolve(spec, buf);
+
     if (NS_FAILED(rv)) return rv;
 
     return SetSpec(buf);

@@ -91,7 +91,6 @@ function tab1Reloaded(aEvent) {
   tab1.linkedBrowser.removeEventListener(aEvent.type, arguments.callee, true);
 
   let hudId1 = HUDService.getHudIdByWindow(tab1.linkedBrowser.contentWindow);
-
   let display1 = HUDService.getOutputNodeById(hudId1);
   let outputNode1 = display1.querySelector(".hud-output-node");
 

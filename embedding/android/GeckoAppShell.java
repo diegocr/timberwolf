@@ -436,6 +436,7 @@ class GeckoAppShell
             GeckoApp.surfaceView.mIMEFocus = state != 0;
             IMEStateUpdater.resetIME();
             break;
+
         }
     }
 

@@ -5420,6 +5420,7 @@ BEGIN_CASE(JSOP_DEFFUN)
             goto error;
     }
 
+
     /*
      * ECMA requires functions defined when entering Eval code to be
      * impermanent.

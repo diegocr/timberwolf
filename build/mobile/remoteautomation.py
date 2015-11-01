@@ -179,3 +179,4 @@ class RemoteAutomation(Automation):
  
         def kill(self):
             self.dm.killProcess(self.procName)
+

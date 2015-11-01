@@ -2868,7 +2868,6 @@ nsComputedDOMStyle::DoGetCursor(nsIDOMCSSValue** aValue)
         delete valueList;
         return NS_ERROR_OUT_OF_MEMORY;
       }
-
       nsROCSSPrimitiveValue *valY = GetROCSSPrimitiveValue();
       if (!valY || !itemList->AppendCSSValue(valY)) {
         delete valY;

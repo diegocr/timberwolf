@@ -167,7 +167,6 @@ public:
    * so we can clean their resources on reset.
    */
   nsTArray<LayerD3D9*> mLayersWithResources;
-
 private:
   friend class SwapChainD3D9;
 

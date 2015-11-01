@@ -49,6 +49,7 @@
 #include "nsILoadGroup.h"
 #include "nsIObserver.h"
 #include "ImageLayers.h"
+
 #include "nsAudioStream.h"
 
 // Define to output information on decoding and painting framerate
