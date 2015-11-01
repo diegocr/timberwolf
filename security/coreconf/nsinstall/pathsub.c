@@ -264,7 +264,11 @@ diagnosePath(const char * path)
 
     if (!path || !path[0]) 
 	fail("Null pointer or empty string passed to mkdirs()");
+#ifdef __amigaos4__
+    myPath = xstrdup(path);
+#else
     myPath = strdup(path);
+#endif
     if (!myPath)
 	fail("strdup() failed!");
     do {

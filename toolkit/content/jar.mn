@@ -83,3 +83,10 @@ toolkit.jar:
 #ifdef MOZ_SVG
    content/global/svg/svgBindings.xml          (/layout/svg/base/src/resources/content/svgBindings.xml)
 #endif
+#ifdef XP_AMIGAOS
++  content/global/timberwolf.xhtml             (timberwolf.xhtml)
++  content/global/boing.html                   (boing.html)
++  content/global/ball.png                     (ball.png)
++  content/global/shadow.png                   (shadow.png)
++  content/global/boing_back.png               (boing_back.png)
+#endif

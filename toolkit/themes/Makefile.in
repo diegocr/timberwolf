@@ -64,6 +64,9 @@ endif
 ifneq (,$(filter os2,$(MOZ_WIDGET_TOOLKIT)))
 DIRS    += pmstripe
 endif
+ifneq (,$(filter amigaos,$(MOZ_WIDGET_TOOLKIT)))
+DIRS    += pmstripe
+endif
 ifdef MOZ_THEME_FASTSTRIPE
 DIRS	+= faststripe
 endif

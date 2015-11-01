@@ -63,7 +63,11 @@ else
 ifeq ($(MOZ_WIDGET_TOOLKIT),android)
 OSDIR		= android
 else
+ifeq ($(MOZ_WIDGET_TOOLKIT),amigaos)
+OSDIR		= amigaos
+else
 OSDIR		= unix
+endif
 endif
 endif
 endif
@@ -119,6 +123,10 @@ endif
 
 ifeq ($(MOZ_WIDGET_TOOLKIT),beos)
 OSHELPER  += nsMIMEInfoBeOS.cpp
+endif
+
+ifeq ($(MOZ_WIDGET_TOOLKIT),amigaos)
+OSHELPER  += nsMIMEInfoAmigaOS.cpp
 endif
 
 ifeq ($(MOZ_WIDGET_TOOLKIT),windows)

@@ -51,7 +51,7 @@
 #include "prerror.h"
 #endif
 
-#if defined (__bsdi__) || defined(NTO) || defined(DARWIN) || defined(BEOS)
+#if defined (__bsdi__) || defined(NTO) || defined(DARWIN) || defined(BEOS) || defined(__amigaos4__)
 #undef _PR_POLL_AVAILABLE
 #endif
 

@@ -65,6 +65,10 @@
 #  define MAP_NOSYNC    0
 # endif
 
+#elif defined(XP_AMIGAOS)
+
+#include <proto/exec.h>
+
 #endif
 
 #ifdef XP_WIN
@@ -346,6 +350,23 @@ UnmapPages(void *addr, size_t size)
 #endif
 }
 
+#elif defined(XP_AMIGAOS)
+#  define JS_GC_HAS_MAP_ALIGN
+
+static void *
+MapAlignedPages(size_t size, size_t alignment)
+{
+	return IExec->AllocVecTags(size,
+			AVT_Type,		MEMF_PRIVATE,
+			AVT_Alignment,	alignment,
+		TAG_DONE);
+}
+
+static void
+UnmapPages(void *addr, size_t size)
+{
+	IExec->FreeVec(addr);
+}
 #endif
 
 namespace js {

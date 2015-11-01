@@ -470,7 +470,11 @@ DOMCI_CLASS(WebGLShader)
 DOMCI_CLASS(WebGLFramebuffer)
 DOMCI_CLASS(WebGLRenderbuffer)
 DOMCI_CLASS(WebGLUniformLocation)
+#ifndef XP_AMIGOAS
 DOMCI_CLASS(WebGLActiveInfo)
+#else
+#warning Do this properly
+#endif
 
 // WebGL Buffers
 DOMCI_CLASS(PaintRequest)

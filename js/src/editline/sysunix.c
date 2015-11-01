@@ -63,6 +63,10 @@
 */
 #include "editline.h"
 
+#if defined(__amigaos4__)
+#undef HAVE_TCGETATTR
+#endif
+
 #if	defined(HAVE_TCGETATTR)
 #include <termios.h>
 

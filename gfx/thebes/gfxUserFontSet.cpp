@@ -229,7 +229,7 @@ PrepareOpenTypeData(const PRUint8* aData, PRUint32* aLength)
         
     case GFX_USERFONT_WOFF: {
         PRUint32 status = eWOFF_ok;
-        PRUint32 bufferSize = woffGetDecodedSize(aData, *aLength, &status);
+        PRUint32 bufferSize = woffGetDecodedSize(aData, *aLength, (uint32_t*)&status);
         if (WOFF_FAILURE(status)) {
             break;
         }
@@ -239,7 +239,7 @@ PrepareOpenTypeData(const PRUint8* aData, PRUint32* aLength)
         }
         woffDecodeToBuffer(aData, *aLength,
                            decodedData, bufferSize,
-                           aLength, &status);
+                           (uint32_t*)aLength, (uint32_t*)&status);
         // replace original data with the decoded version
         NS_Free((void*)aData);
         aData = decodedData;
@@ -405,7 +405,7 @@ PreloadTableFromWOFF(const PRUint8* aFontData, PRUint32 aLength,
                      PRUint32 aTableTag, gfxFontEntry* aFontEntry)
 {
     PRUint32 status = eWOFF_ok;
-    PRUint32 len = woffGetTableSize(aFontData, aLength, aTableTag, &status);
+    PRUint32 len = woffGetTableSize(aFontData, aLength, aTableTag, (uint32_t*)&status);
     if (WOFF_SUCCESS(status) && len > 0) {
         FallibleTArray<PRUint8> buffer;
         if (!buffer.AppendElements(len)) {
@@ -414,7 +414,7 @@ PreloadTableFromWOFF(const PRUint8* aFontData, PRUint32 aLength,
         }
         woffGetTableToBuffer(aFontData, aLength, aTableTag,
                              buffer.Elements(), buffer.Length(),
-                             &len, &status);
+                             (uint32_t*)&len, (uint32_t*)&status);
         if (WOFF_FAILURE(status)) {
             NS_WARNING("failed to cache font table - WOFF decoding error?");
             return;

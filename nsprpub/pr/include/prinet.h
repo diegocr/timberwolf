@@ -117,6 +117,16 @@ struct sockaddr_dl;
  * an unfortunate inconsistency with other platforms.
  */
 
+#elif defined(XP_AMIGAOS)
+typedef unsigned char   u_char;
+typedef unsigned short  u_short;
+typedef unsigned int    u_int;
+typedef unsigned long   u_long;
+
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+
 #else
 
 #error Unknown platform

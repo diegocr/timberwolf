@@ -70,7 +70,11 @@ ifdef MOZ_SPLASHSCREEN
 ifeq ($(OS_ARCH),WINCE)
 CPPSRCS += nsSplashScreenWin.cpp
 else
+ifeq ($(OS_ARCH),AmigaOS)
+CPPSRCS += nsSplashScreenAmigaOS.cpp
+else
 CPPSRCS += nsSplashScreenDummy.cpp
+endif
 endif
 endif
 
@@ -104,12 +108,16 @@ else
 ifeq ($(MOZ_WIDGET_TOOLKIT),gtk2)
 CPPSRCS += nsNativeAppSupportUnix.cpp
 else
+ifeq ($(MOZ_WIDGET_TOOLKIT),amigaos)
+CPPSRCS += nsNativeAppSupportAmigaOS.cpp
+else
 ifeq ($(MOZ_WIDGET_TOOLKIT),qt)
 CPPSRCS += nsNativeAppSupportQt.cpp
 CPPSRCS += nsQAppInstance.cpp
 EXPORTS += nsQAppInstance.h
 else
 CPPSRCS += nsNativeAppSupportDefault.cpp
+endif
 endif
 endif
 endif

@@ -96,7 +96,11 @@ else
 ifeq ($(MOZ_WIDGET_TOOLKIT),windows)
 CPPSRCS		+= nsLocalFileWin.cpp nsMediaCacheRemover.cpp
 else
+ifeq ($(MOZ_WIDGET_TOOLKIT),amigaos)
+CPPSRCS		+= nsLocalFileAmigaOS.cpp
+else
 CPPSRCS		+= nsLocalFileUnix.cpp
+endif # amigaos
 endif # windows
 endif # OS2
 
@@ -123,7 +127,11 @@ else
 ifeq ($(MOZ_WIDGET_TOOLKIT),windows)
 EXPORTS		+= nsLocalFileWin.h
 else
+ifeq ($(MOZ_WIDGET_TOOLKIT),amigaos)
+EXPORTS		+= nsLocalFileAmigaOS.h
+else
 EXPORTS		+= nsLocalFileUnix.h
+endif # amigaos 
 endif # windows
 endif # os2
 

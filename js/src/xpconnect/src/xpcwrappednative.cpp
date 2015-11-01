@@ -975,7 +975,7 @@ XPCWrappedNative::GatherProtoScriptableCreateInfo(
         nsCOMPtr<nsIXPCScriptable> helper =
           dont_AddRef(static_cast<nsIXPCScriptable*>(classInfoHelper));
         JSUint32 flags;
-        nsresult rv = classInfoHelper->GetScriptableFlags(&flags);
+        nsresult rv = classInfoHelper->GetScriptableFlags((PRUint32 *)&flags);
         if(NS_FAILED(rv))
             flags = 0;
 
@@ -996,7 +996,7 @@ XPCWrappedNative::GatherProtoScriptableCreateInfo(
         if(helper)
         {
             JSUint32 flags;
-            rv = helper->GetScriptableFlags(&flags);
+            rv = helper->GetScriptableFlags((PRUint32 *)&flags);
             if(NS_FAILED(rv))
                 flags = 0;
 
@@ -1030,7 +1030,7 @@ XPCWrappedNative::GatherScriptableCreateInfo(
     if(helper)
     {
         JSUint32 flags;
-        nsresult rv = helper->GetScriptableFlags(&flags);
+        nsresult rv = helper->GetScriptableFlags((PRUint32 *)&flags);
         if(NS_FAILED(rv))
             flags = 0;
 
@@ -3913,7 +3913,7 @@ ConstructProxyObject(XPCCallContext &ccx,
 #ifdef DEBUG
     {
         JSUint32 flagsInt;
-        nsresult debug_rv = classInfoHelper->GetScriptableFlags(&flagsInt);
+        nsresult debug_rv = classInfoHelper->GetScriptableFlags((PRUint32 *)&flagsInt);
         XPCNativeScriptableFlags flags(flagsInt);
         NS_ASSERTION(NS_SUCCEEDED(debug_rv) && flags.WantPreCreate(),
                      "bad flags, cache->IsProxy() implies WantPreCreate()");
@@ -3940,7 +3940,7 @@ ConstructSlimWrapper(XPCCallContext &ccx,
     nsXPCClassInfo *classInfoHelper = aHelper.GetXPCClassInfo();
 
     JSUint32 flagsInt;
-    nsresult rv = classInfoHelper->GetScriptableFlags(&flagsInt);
+    nsresult rv = classInfoHelper->GetScriptableFlags((PRUint32 *)&flagsInt);
     if(NS_FAILED(rv))
         flagsInt = 0;
 

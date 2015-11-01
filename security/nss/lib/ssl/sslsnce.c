@@ -77,7 +77,7 @@
  */
 #include "seccomon.h"
 
-#if defined(XP_UNIX) || defined(XP_WIN32) || defined (XP_OS2) || defined(XP_BEOS)
+#if defined(XP_UNIX) || defined(XP_WIN32) || defined (XP_OS2) || defined(XP_BEOS) || defined(XP_AMIGAOS)
 
 #include "cert.h"
 #include "ssl.h"
@@ -90,7 +90,7 @@
 
 #include <stdio.h>
 
-#if defined(XP_UNIX) || defined(XP_BEOS)
+#if defined(XP_UNIX) || defined(XP_BEOS) || defined(XP_AMIGAOS)
 
 #include <syslog.h>
 #include <fcntl.h>
@@ -324,6 +324,11 @@ typedef struct inheritanceStr inheritance;
 
 #endif /* XP_UNIX || XP_BEOS */
 
+#if defined(XP_AMIGAOS)
+#warning "Use Amiga paths"
+#define DEFAULT_CACHE_DIRECTORY "/tmp"
+
+#endif
 
 /************************************************************************/
 
@@ -1201,7 +1206,7 @@ InitCache(cacheDesc *cache, int maxCacheEntries, int maxCertCacheEntries,
 
     if (shared) {
 	/* Create file names */
-#if defined(XP_UNIX) || defined(XP_BEOS)
+#if defined(XP_UNIX) || defined(XP_BEOS) || defined(XP_AMIGAOS)
 	/* there's some confusion here about whether PR_OpenAnonFileMap wants
 	** a directory name or a file name for its first argument.
 	cfn = PR_smprintf("%s/.sslsvrcache.%d", directory, myPid);

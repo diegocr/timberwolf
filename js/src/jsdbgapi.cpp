@@ -127,7 +127,7 @@ CompartmentHasLiveScripts(JSCompartment *comp)
     JSContext *iter = NULL;
     JSContext *icx;
     while ((icx = JS_ContextIterator(comp->rt, &iter))) {
-#ifdef JS_THREADSAFE
+#if defined(JS_THREADSAFE) && defined(JS_METHODJIT)
         if (JS_GetContextThread(icx) != currentThreadId)
             continue;
 #endif

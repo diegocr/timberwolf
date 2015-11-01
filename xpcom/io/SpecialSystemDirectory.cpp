@@ -92,6 +92,11 @@
 #include <image.h>
 #include "prenv.h"
 
+#elif defined(XP_AMIGAOS)
+
+#include <unistd.h>
+#include <stdlib.h>
+
 #endif
 
 #if defined(VMS)
@@ -636,7 +641,11 @@ GetSpecialSystemDirectory(SystemDirectories aSystemSystemDirectory,
         {
             return GetOSXFolderType(kUserDomain, kTemporaryFolderType, aFile);
         }
-
+#elif defined(XP_AMIGAOS)
+        {
+        	return NS_NewNativeLocalFile(nsDependentCString("T:"), PR_TRUE, aFile);
+        }
+        
 #elif defined(XP_UNIX) || defined(XP_BEOS)
         {
             static const char *tPath = nsnull;
@@ -886,6 +895,16 @@ GetSpecialSystemDirectory(SystemDirectories aSystemSystemDirectory,
         }
 #endif  // XP_WIN
 
+#if defined(XP_AMIGAOS)
+        case AmigaOS_HomeDirectory:
+        	return NS_NewNativeLocalFile(nsDependentCString("CURRENTUSER:"), PR_TRUE, aFile);
+        case AmigaOS_SettingsDirectory:
+        	return NS_NewNativeLocalFile(nsDependentCString("CURRENTUSER:"), PR_TRUE, aFile);
+        case AmigaOS_SystemDirectory:
+        	return NS_NewNativeLocalFile(nsDependentCString("SYS:"), PR_TRUE, aFile);
+        case AmigaOS_DesktopDirectory:
+        	return NS_NewNativeLocalFile(nsDependentCString("CURRENTUSER:"), PR_TRUE, aFile);
+#endif
 #if defined(XP_UNIX)
         case Unix_LocalDirectory:
             return NS_NewNativeLocalFile(nsDependentCString("/usr/local/netscape/"),

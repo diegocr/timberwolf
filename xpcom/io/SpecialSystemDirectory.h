@@ -131,7 +131,12 @@ enum SystemDirectories {
   OS2_SystemDirectory       =   501,   
   OS2_OS2Directory          =   502,   
   OS2_DesktopDirectory      =   503,   
-  OS2_HomeDirectory         =   504
+  OS2_HomeDirectory         =   504,
+  
+  AmigaOS_HomeDirectory		=   601,
+  AmigaOS_SettingsDirectory =   602,
+  AmigaOS_SystemDirectory   =   603,
+  AmigaOS_DesktopDirectory  =   604
 };
 
 nsresult

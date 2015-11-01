@@ -69,6 +69,9 @@ endif
 ifeq (BeOS,$(OS_ARCH))
 LINKSRC = nsGlueLinkingBeOS.cpp
 endif
+ifeq (AmigaOS, $(OS_ARCH))
+LINKSRC = nsGlueLinkingDlopen.cpp
+endif
 
 ifndef LINKSRC
 LINKSRC = nsGlueLinkingNull.cpp

@@ -239,7 +239,7 @@ bool ots_glyf_parse(OpenTypeFile *file, const uint8_t *data, size_t length) {
       return OTS_FAILURE();
     }
 
-    unsigned new_size = 0;
+    uint32_t new_size = 0;
     if (num_contours >= 0) {
       // this is a simple glyph and might contain bytecode
       if (!ParseSimpleGlyph(file, data, &table,

@@ -44,6 +44,11 @@
 
 /* arena allocation for the frame tree and closely-related objects */
 
+#ifdef __amigaos4__
+/* TODO AMIGAOS Until I re-worked the delay allocation in the ExecSG kernel, I'll just go for the malloc variant. */
+#define DEBUG_TRACEMALLOC_PRESARENA 1
+#endif
+
 #include "nsPresArena.h"
 #include "nsCRT.h"
 #include "nsDebug.h"
@@ -70,6 +75,8 @@
 
 #ifdef _WIN32
 # include <windows.h>
+#elif defined (__amigaos4__)
+# include <proto/exec.h>
 #elif !defined(__OS2__)
 # include <unistd.h>
 # include <sys/mman.h>
@@ -162,6 +169,31 @@ GetDesiredRegionSize()
 }
 
 #define RESERVE_FAILED 0
+
+#elif defined(__amigaos4__)
+static void *
+ReserveRegion(PRUword region, PRUword size)
+{
+#warning not implemented
+}
+
+static void
+ReleaseRegion(void *region, PRUword size)
+{
+#warning not implemented
+}
+
+static bool
+ProbeRegion(PRUword region, PRUword size)
+{
+#warning not implemented
+}
+
+static PRUword
+GetDesiredRegionSize()
+{
+#warning not implemented
+}
 
 #else // Unix
 

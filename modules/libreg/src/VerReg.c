@@ -280,7 +280,7 @@ done:
 
 #if defined(XP_WIN) || defined(XP_OS2)
 #define VR_FILE_SEP '\\'
-#elif defined(XP_UNIX) || defined(XP_BEOS)
+#elif defined(XP_UNIX) || defined(XP_BEOS) || defined(XP_AMIGAOS)
 #define VR_FILE_SEP '/'
 #endif
 

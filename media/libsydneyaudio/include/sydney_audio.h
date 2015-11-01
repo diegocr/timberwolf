@@ -87,6 +87,8 @@ async-signal safe.
 #   endif
 #elif defined(AIX)
 #	define SA_BIG_ENDIAN 1
+#elif defined(__amigaos4__)
+#   define SA_BIG_ENDIAN 1
 #else
 #    error "Cannot determine byte order!"
 #endif

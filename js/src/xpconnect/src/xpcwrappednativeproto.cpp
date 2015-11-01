@@ -220,7 +220,7 @@ XPCWrappedNativeProto::GetNewOrUsed(XPCCallContext& ccx,
     JSBool shared;
 
     JSUint32 ciFlags;
-    if(NS_FAILED(ClassInfo->GetFlags(&ciFlags)))
+    if(NS_FAILED(ClassInfo->GetFlags((PRUint32 *)&ciFlags)))
         ciFlags = 0;
 
     if(ciFlags & XPC_PROTO_DONT_SHARE)

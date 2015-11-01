@@ -71,6 +71,10 @@
 # include <os2.h>
 #elif defined(XP_UNIX) || defined(XP_BEOS)
 # include <unistd.h>
+#elif defined(XP_AMIGAOS)
+# include <unistd.h>
+# include <proto/exec.h>
+extern struct ExecIFace *IExec;
 #endif
 
 //
@@ -439,11 +443,16 @@ ApplyUpdate(nsIFile *greDir, nsIFile *updateDir, nsILocalFile *statusFile,
 
   // Construct the PID argument for this process.  If we are using execv, then
   // we pass "0" which is then ignored by the updater.
+#if defined(XP_AMIGAOS)
+  nsCAutoString pid;
+  pid.AppendInt((PRInt32) IExec->FindTask(NULL));
+#else
 #if defined(USE_EXECV)
   NS_NAMED_LITERAL_CSTRING(pid, "0");
 #else
   nsCAutoString pid;
   pid.AppendInt((PRInt32) getpid());
+#endif
 #endif
 
   int argc = appArgc + 5;

@@ -94,6 +94,8 @@
 #elif defined(XP_OS2)
 # define INCL_DOSMEMMGR
 # include <os2.h>
+#elif defined(XP_AMIGAOS)
+#include <proto/exec.h>
 #else
 # include <unistd.h>
 # include <sys/mman.h>
@@ -159,6 +161,14 @@ StackSpace::init()
         return false;
     base = reinterpret_cast<Value *>(p);
     end = base + CAPACITY_VALS;
+#elif defined(XP_AMIGAOS)
+    p = IExec->AllocVecTags(CAPACITY_BYTES,
+		    AVT_Type,	MEMF_PRIVATE,
+		    TAG_DONE);
+    if (!p)
+    	return false;
+    base = reinterpret_cast<Value *>(p);
+    end = base + CAPACITY_VALS;
 #else
     JS_ASSERT(CAPACITY_BYTES % getpagesize() == 0);
     p = mmap(NULL, CAPACITY_BYTES, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
@@ -178,6 +188,8 @@ StackSpace::finish()
     VirtualFree(base, 0, MEM_RELEASE);
 #elif defined(XP_OS2)
     DosFreeMem(base);
+#elif defined(XP_AMIGAOS)
+    IExec->FreeVec((void *)base);
 #else
 #ifdef SOLARIS
     munmap((caddr_t)base, CAPACITY_BYTES);

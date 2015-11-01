@@ -21,6 +21,8 @@
 #define OS_LINUX 1
 #elif defined(_WIN32)
 #define OS_WIN 1
+#elif defined(__amigaos4__)
+#define OS_AMIGAOS 1
 #else
 #error Please add support for your platform in build/build_config.h
 #endif
@@ -57,7 +59,7 @@
 #define ARCH_CPU_ARMEL 1
 #define ARCH_CPU_32_BITS 1
 #define WCHAR_T_IS_UNSIGNED 1
-#elif defined(__ppc__)
+#elif defined(__ppc__) || defined(__powerpc__)
 #define ARCH_CPU_PPC 1
 #define ARCH_CPU_32_BITS 1
 #else

@@ -456,6 +456,11 @@ LIBPTHREAD =
 XCFLAGS = $(OS_CFLAGS)
 endif
 
+ifeq ($(OS_ARCH),AmigaOS)
+EXTRA_LIBS = -lpthread -ldl
+LDOPTS += -use-dynld
+endif
+
 #####################################################
 #
 # The rules

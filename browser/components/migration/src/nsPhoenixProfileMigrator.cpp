@@ -299,6 +299,12 @@ nsPhoenixProfileMigrator::FillProfileDataFromPhoenixRegistry()
   
   phoenixRegistry->Append(NS_LITERAL_STRING("Phoenix"));
   phoenixRegistry->Append(NS_LITERAL_STRING("registry.dat"));
+#elif defined(XP_AMIGAOS)
+  fileLocator->Get(NS_AMIGAOS_HOME_DIR, NS_GET_IID(nsILocalFile), getter_AddRefs(phoenixRegistry));
+
+  phoenixRegistry->Append(NS_LITERAL_STRING(".phoenix"));
+  phoenixRegistry->Append(NS_LITERAL_STRING("registry.dat"));
+
 #endif
 
 

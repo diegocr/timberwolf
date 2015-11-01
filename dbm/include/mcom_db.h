@@ -74,6 +74,12 @@
 #define LITTLE_ENDIAN   1234            /* LSB first: i386, vax, all NT risc */
 #endif
 
+#ifdef __amigaos4__
+#define BYTE_ORDER BIG_ENDIAN
+#define BIG_ENDIAN      4321
+#define LITTLE_ENDIAN   1234            /* LSB first: i386, vax, all NT risc */
+#endif
+
 #ifdef __sun
 #define BIG_ENDIAN      4321
 #define LITTLE_ENDIAN   1234            /* LSB first: i386, vax, all NT risc */

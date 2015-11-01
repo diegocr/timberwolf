@@ -58,7 +58,7 @@ typedef unsigned int mode_t;
 
 #define HAVE_LCHOWN
 
-#if defined(AIX) || defined(BSDI) || defined(HPUX) || defined(LINUX) || defined(SUNOS4) || defined(SCO) || defined(UNIXWARE) || defined(NTO) || defined(DARWIN) || defined(BEOS) || defined(__riscos__)
+#if defined(AIX) || defined(BSDI) || defined(HPUX) || defined(LINUX) || defined(SUNOS4) || defined(SCO) || defined(UNIXWARE) || defined(NTO) || defined(DARWIN) || defined(BEOS) || defined(__riscos__) || defined(__amigaos4__)
 #undef HAVE_LCHOWN
 #endif
 
@@ -69,6 +69,10 @@ typedef unsigned int mode_t;
 #endif
 
 #ifdef LINUX
+#include <getopt.h>
+#endif
+
+#ifdef __amigaos4__
 #include <getopt.h>
 #endif
 

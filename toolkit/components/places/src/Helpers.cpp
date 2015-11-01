@@ -307,6 +307,18 @@ GenerateRandomBytes(PRUint32 aSize,
   memcpy(_buffer, temp, aSize);
   NS_Free(temp);
   return NS_OK;
+#elif defined(XP_AMIGAOS)
+  NS_ENSURE_ARG_MAX(aSize, PR_INT32_MAX);
+  PRFileDesc* urandom = PR_Open("random:", PR_RDONLY, 0);
+  nsresult rv = NS_ERROR_FAILURE;
+  if (urandom) {
+    PRInt32 bytesRead = PR_Read(urandom, _buffer, aSize);
+    if (bytesRead == static_cast<PRInt32>(aSize)) {
+      rv = NS_OK;
+    }
+    (void)PR_Close(urandom);
+  }
+  return rv;
 #endif
 }
 

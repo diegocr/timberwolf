@@ -97,6 +97,10 @@ LOCAL_INCLUDES += -I$(topsrcdir)/build/wince/shunt/include \
                   -I$(topsrcdir)/build/wince/shunt
 endif
 
+ifeq ($(OS_ARCH),AmigaOS)
+OS_LIBS += "-lpthread"
+endif
+
 ifneq ($(MOZ_ENABLE_GTK2),)
 HAVE_PROGRESSUI = 1
 CPPSRCS += \

@@ -74,6 +74,11 @@ static PRLogModuleInfo *gFontInfoLog = PR_NewLogModule("fontInfoLog");
 #define ALOG(args...)  __android_log_print(ANDROID_LOG_INFO, "Gecko" , ## args)
 
 #endif
+
+#ifdef XP_AMIGAOS
+#include "gfxAmigaOSPlatform.h"
+#endif
+
 #define LOG(args) PR_LOG(gFontInfoLog, PR_LOG_DEBUG, args)
 #define LOG_ENABLED() PR_LOG_TEST(gFontInfoLog, PR_LOG_DEBUG)
 
@@ -121,6 +126,8 @@ gfxFT2FontList::AppendFacesFromFontFile(const char *aFileName)
     FT_Library ftLibrary = gfxWindowsPlatform::GetPlatform()->GetFTLibrary();
 #elif defined(ANDROID)
     FT_Library ftLibrary = gfxAndroidPlatform::GetPlatform()->GetFTLibrary();
+#elif defined(XP_AMIGAOS)
+    FT_Library ftLibrary = gfxAmigaOSPlatform::GetPlatform()->GetFTLibrary();
 #endif
     FT_Face dummy;
     if (FT_Err_Ok == FT_New_Face(ftLibrary, aFileName, -1, &dummy)) {

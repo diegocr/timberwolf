@@ -76,6 +76,8 @@
 #include "nsLocalFileUnix.h"
 #elif defined(XP_OS2)
 #include "nsLocalFileOS2.h"
+#elif defined(XP_AMIGAOS)
+#include "nsLocalFileAmigaOS.h"
 #else
 #error NOT_IMPLEMENTED
 #endif

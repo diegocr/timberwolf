@@ -80,6 +80,11 @@
 #define NO_GLOBAL_STATE
 #define MALLOC js_malloc
 #define FREE js_free
+
+#ifdef __amigaos4__
+#define dtoa ___dtoa
+#endif
+
 #include "dtoa.c"
 
 /* Mapping of JSDToStrMode -> js_dtoa mode */

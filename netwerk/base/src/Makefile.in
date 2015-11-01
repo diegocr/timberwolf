@@ -113,7 +113,11 @@ else
 ifeq (cocoa,$(MOZ_WIDGET_TOOLKIT))
 	CPPSRCS += nsURLHelperOSX.cpp
 else
+ifeq ($(MOZ_WIDGET_TOOLKIT),amigaos)
+	CPPSRCS += nsURLHelperAmigaOS.cpp
+else
 	CPPSRCS += nsURLHelperUnix.cpp
+endif
 endif
 endif
 endif

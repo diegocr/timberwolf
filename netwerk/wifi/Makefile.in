@@ -73,6 +73,10 @@ else
 ifeq ($(OS_ARCH),SunOS)
 CPPSRCS += nsWifiScannerSolaris.cpp
 OS_INCLUDES += $(GLIB_CFLAGS)
+else
+ifeq ($(OS_ARCH),AmigaOS)
+CPPSRCS	+= nsWifiScannerAmigaOS.cpp
+endif # amigaos
 endif # solaris
 endif # linux
 endif # windows

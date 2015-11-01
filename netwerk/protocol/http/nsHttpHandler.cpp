@@ -101,6 +101,11 @@
 #include <os2.h>
 #endif
 
+#if defined(XP_AMIGAOS)
+#include <proto/exec.h>
+#include <proto/expansion.h>
+#endif
+
 //-----------------------------------------------------------------------------
 using namespace mozilla::net;
 #ifdef MOZ_IPC
@@ -691,6 +696,8 @@ nsHttpHandler::InitUserAgentComponents()
     "Maemo"
 #elif defined(MOZ_X11)
     "X11"
+#elif defined(XP_AMIGAOS)
+    "AmigaOS"
 #else
     "?"
 #endif
@@ -751,6 +758,13 @@ nsHttpHandler::InitUserAgentComponents()
         (::Gestalt(gestaltSystemVersionMinor, &minorVersion) == noErr)) {
         mOscpu += nsPrintfCString(" %d.%d", majorVersion, minorVersion);
     }
+#elif defined (XP_AMIGAOS)
+    char *cpuModel = "PowerPC";
+
+//   IExec->GetCPUInfoTags(GCIT_ModelString, &cpuModel, TAG_DONE);
+
+    mOscpu.AssignLiteral("AmigaOS");
+    mOscpu += nsPrintfCString(" %ld.%ld %s", IExec->Data.LibBase->lib_Version, IExec->Data.LibBase->lib_Revision, cpuModel);
 #elif defined (XP_UNIX) || defined (XP_BEOS)
     struct utsname name;
     

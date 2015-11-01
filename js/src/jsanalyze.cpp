@@ -77,9 +77,15 @@ ArenaNew(JSArenaPool &pool)
 // Bytecode
 /////////////////////////////////////////////////////////////////////
 
+#ifdef XP_AMIGAOS
+bool
+Bytecode::mergeDefines(JSContext *cx, Script *script, bool initial, uint32 newDepth,
+                       uint32 *newArray, uint32 newCount)
+#else
 bool
 Bytecode::mergeDefines(JSContext *cx, Script *script, bool initial, unsigned newDepth,
                        uint32 *newArray, unsigned newCount)
+#endif
 {
     if (initial) {
         /*

@@ -375,6 +375,14 @@ static PRStatus PR_CALLBACK SocketConnectContinue(
         return PR_SUCCESS;
 #endif /* BONE_VERSION */
 
+#elif defined(XP_AMIGAOS)
+    err = _MD_amigaos_get_nonblocking_connect_error(osfd);
+    if (err != 0) {
+        _PR_MD_MAP_CONNECT_ERROR(err);
+        return PR_FAILURE;
+    }
+    return PR_SUCCESS;
+
 #else
     PR_SetError(PR_NOT_IMPLEMENTED_ERROR, 0);
     return PR_FAILURE;
@@ -917,7 +925,7 @@ PRIntervalTime timeout)
 	if (raddr == NULL) {
 		raddr = &raddrCopy;
 	}
-	rv = _PR_MD_FAST_ACCEPT_READ(sd, &newSock, raddr, buf, amount, 
+	rv = _PR_MD_FAST_ACCEPT_READ(sd, &newSock, raddr, buf, amount,
 	    timeout, PR_TRUE, NULL, NULL);
 	if (rv < 0) {
 		rv = -1;
@@ -946,7 +954,7 @@ PRIntervalTime timeout)
 }
 
 PR_IMPLEMENT(PRInt32) PR_NTFast_AcceptRead_WithTimeoutCallback(
-PRFileDesc *sd, PRFileDesc **nd, 
+PRFileDesc *sd, PRFileDesc **nd,
 PRNetAddr **raddr, void *buf, PRInt32 amount,
 PRIntervalTime timeout,
 _PR_AcceptTimeoutCallback callback,
@@ -1047,7 +1055,7 @@ static PRInt32 PR_CALLBACK SocketSendFile(
 	return rv;
 }
 
-static PRInt32 PR_CALLBACK SocketTransmitFile(PRFileDesc *sd, PRFileDesc *fd, 
+static PRInt32 PR_CALLBACK SocketTransmitFile(PRFileDesc *sd, PRFileDesc *fd,
 const void *headers, PRInt32 hlen, PRTransmitFileFlags flags,
 PRIntervalTime timeout)
 {
@@ -1140,11 +1148,11 @@ static PRIOMethods tcpMethods = {
 	(PRReservedFN)_PR_InvalidInt,
 	_PR_SocketGetSocketOption,
 	_PR_SocketSetSocketOption,
-    SocketSendFile, 
+    SocketSendFile,
     SocketConnectContinue,
-    (PRReservedFN)_PR_InvalidInt, 
-    (PRReservedFN)_PR_InvalidInt, 
-    (PRReservedFN)_PR_InvalidInt, 
+    (PRReservedFN)_PR_InvalidInt,
+    (PRReservedFN)_PR_InvalidInt,
+    (PRReservedFN)_PR_InvalidInt,
     (PRReservedFN)_PR_InvalidInt
 };
 
@@ -1179,11 +1187,11 @@ static PRIOMethods udpMethods = {
 	(PRReservedFN)_PR_InvalidInt,
 	_PR_SocketGetSocketOption,
 	_PR_SocketSetSocketOption,
-    (PRSendfileFN)_PR_InvalidInt, 
-    (PRConnectcontinueFN)_PR_InvalidStatus, 
-    (PRReservedFN)_PR_InvalidInt, 
-    (PRReservedFN)_PR_InvalidInt, 
-    (PRReservedFN)_PR_InvalidInt, 
+    (PRSendfileFN)_PR_InvalidInt,
+    (PRConnectcontinueFN)_PR_InvalidStatus,
+    (PRReservedFN)_PR_InvalidInt,
+    (PRReservedFN)_PR_InvalidInt,
+    (PRReservedFN)_PR_InvalidInt,
     (PRReservedFN)_PR_InvalidInt
 };
 
@@ -1200,30 +1208,30 @@ static PRIOMethods socketpollfdMethods = {
     (PRSeek64FN)_PR_InvalidInt64,
     (PRFileInfoFN)_PR_InvalidStatus,
     (PRFileInfo64FN)_PR_InvalidStatus,
-    (PRWritevFN)_PR_InvalidInt,        
-    (PRConnectFN)_PR_InvalidStatus,        
-    (PRAcceptFN)_PR_InvalidDesc,        
-    (PRBindFN)_PR_InvalidStatus,        
-    (PRListenFN)_PR_InvalidStatus,        
-    (PRShutdownFN)_PR_InvalidStatus,    
-    (PRRecvFN)_PR_InvalidInt,        
-    (PRSendFN)_PR_InvalidInt,        
-    (PRRecvfromFN)_PR_InvalidInt,    
-    (PRSendtoFN)_PR_InvalidInt,        
+    (PRWritevFN)_PR_InvalidInt,
+    (PRConnectFN)_PR_InvalidStatus,
+    (PRAcceptFN)_PR_InvalidDesc,
+    (PRBindFN)_PR_InvalidStatus,
+    (PRListenFN)_PR_InvalidStatus,
+    (PRShutdownFN)_PR_InvalidStatus,
+    (PRRecvFN)_PR_InvalidInt,
+    (PRSendFN)_PR_InvalidInt,
+    (PRRecvfromFN)_PR_InvalidInt,
+    (PRSendtoFN)_PR_InvalidInt,
 	SocketPoll,
-    (PRAcceptreadFN)_PR_InvalidInt,   
-    (PRTransmitfileFN)_PR_InvalidInt, 
-    (PRGetsocknameFN)_PR_InvalidStatus,    
-    (PRGetpeernameFN)_PR_InvalidStatus,    
-    (PRReservedFN)_PR_InvalidInt,    
-    (PRReservedFN)_PR_InvalidInt,    
+    (PRAcceptreadFN)_PR_InvalidInt,
+    (PRTransmitfileFN)_PR_InvalidInt,
+    (PRGetsocknameFN)_PR_InvalidStatus,
+    (PRGetpeernameFN)_PR_InvalidStatus,
+    (PRReservedFN)_PR_InvalidInt,
+    (PRReservedFN)_PR_InvalidInt,
     (PRGetsocketoptionFN)_PR_InvalidStatus,
     (PRSetsocketoptionFN)_PR_InvalidStatus,
-    (PRSendfileFN)_PR_InvalidInt, 
-    (PRConnectcontinueFN)_PR_InvalidStatus, 
-    (PRReservedFN)_PR_InvalidInt, 
-    (PRReservedFN)_PR_InvalidInt, 
-    (PRReservedFN)_PR_InvalidInt, 
+    (PRSendfileFN)_PR_InvalidInt,
+    (PRConnectcontinueFN)_PR_InvalidStatus,
+    (PRReservedFN)_PR_InvalidInt,
+    (PRReservedFN)_PR_InvalidInt,
+    (PRReservedFN)_PR_InvalidInt,
     (PRReservedFN)_PR_InvalidInt
 };
 
@@ -1310,7 +1318,7 @@ PR_IMPLEMENT(PRFileDesc*) PR_Socket(PRInt32 domain, PRInt32 type, PRInt32 proto)
 #endif
 #if defined(_PR_INET6_PROBE) || !defined(_PR_INET6)
 		/*
-		 * For platforms with no support for IPv6 
+		 * For platforms with no support for IPv6
 		 * create layered socket for IPv4-mapped IPv6 addresses
 		 */
 		if (PR_AF_INET6 == tmp_domain && PR_AF_INET == domain) {
@@ -1352,7 +1360,7 @@ PR_IMPLEMENT(PRFileDesc*) PR_OpenUDPSocket(PRIntn af)
 
 PR_IMPLEMENT(PRStatus) PR_NewTCPSocketPair(PRFileDesc *f[])
 {
-#ifdef XP_UNIX
+#if defined(XP_UNIX) || defined(XP_AMIGAOS)
 	PRInt32 rv, osfd[2];
 
 	if (!_pr_initialized) _PR_ImplicitInitialization();
@@ -1749,12 +1757,12 @@ out_of_memory:
 #endif /* !defined(NEED_SELECT) */
 
 PR_IMPLEMENT(PRInt32) PR_Select(
-    PRInt32 unused, PR_fd_set *pr_rd, PR_fd_set *pr_wr, 
+    PRInt32 unused, PR_fd_set *pr_rd, PR_fd_set *pr_wr,
     PR_fd_set *pr_ex, PRIntervalTime timeout)
 {
 
 #if !defined(NEED_SELECT)
-    PRInt32 npds = 0; 
+    PRInt32 npds = 0;
     /*
     ** Find out how many fds are represented in the three lists.
     ** Then allocate a polling descriptor for the logical union
@@ -1827,8 +1835,8 @@ PR_IMPLEMENT(PRInt32) PR_Select(
     return npds;
 out_of_memory:
     PR_SetError(PR_OUT_OF_MEMORY_ERROR, 0);
-    return -1;    
+    return -1;
 
 #endif /* !defined(NEED_SELECT) */
-    
+
 }

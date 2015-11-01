@@ -81,6 +81,8 @@
 #  define WIDGET_MODULES MODULE(nsWidgetQtModule)
 #elif defined(MOZ_WIDGET_ANDROID)
 #  define WIDGET_MODULES MODULE(nsWidgetAndroidModule)
+#elif defined(XP_AMIGAOS)
+#  define WIDGET_MODULES MODULE(nsWidgetAmigaOSModule)
 #else
 #  error Unknown widget module.
 #endif

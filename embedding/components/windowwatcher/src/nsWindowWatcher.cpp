@@ -1429,6 +1429,8 @@ void nsWindowWatcher::CheckWindowName(nsString& aName)
       NS_WARNING(warn.get());
       break;
     }
+
+  printf("Window name: %s\n", aName.BeginReading());
 }
 #endif // DEBUG
 

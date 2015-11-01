@@ -38,7 +38,12 @@
 #include "stubs.h"
 #endif
 
+#if defined(__amigaos4__)
+#include <stdlib.h>
+#include <string.h>
+#else
 #include <memory.h>
+#endif
 #include "blapi.h"
 #include "sha_fast.h"
 #include "prerror.h"

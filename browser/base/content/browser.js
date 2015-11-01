@@ -1298,6 +1298,10 @@ function BrowserStartup() {
       // border.  Use 28px as a guess (titlebar + bottom window border)
       defaultHeight -= 28;
 #endif
+#ifdef XP_AMIGAOS
+	  // Same here
+	  defaultHeight -= 40;
+#endif
     }
     document.documentElement.setAttribute("width", defaultWidth);
     document.documentElement.setAttribute("height", defaultHeight);
@@ -4498,7 +4502,7 @@ var XULBrowserWindow = {
     try {
       this._host = gBrowser.contentWindow.location.host;
     } catch(ex) {
-      this._host = null;
+      this._host = null;      
     }
 #endif
 

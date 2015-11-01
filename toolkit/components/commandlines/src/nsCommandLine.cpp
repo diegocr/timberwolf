@@ -431,6 +431,38 @@ nsCommandLine::ResolveFile(const nsAString& aArgument, nsIFile* *aResult)
   NS_ADDREF(*aResult = lf);
   return NS_OK;
 
+#elif defined(XP_AMIGAOS)
+#warning Include handling of AmigaOS specific paths
+  nsCOMPtr<nsILocalFile> lf (do_CreateInstance(NS_LOCAL_FILE_CONTRACTID));
+  NS_ENSURE_TRUE(lf, NS_ERROR_OUT_OF_MEMORY);
+
+  if (aArgument.First() == '/') {
+    // absolute path
+    rv = lf->InitWithPath(aArgument);
+    if (NS_FAILED(rv)) return rv;
+
+    NS_ADDREF(*aResult = lf);
+    return NS_OK;
+  }
+
+  nsCAutoString nativeArg;
+  NS_CopyUnicodeToNative(aArgument, nativeArg);
+
+  nsCAutoString newpath;
+  mWorkingDir->GetNativePath(newpath);
+
+  newpath.Append('/');
+  newpath.Append(nativeArg);
+
+  rv = lf->InitWithNativePath(newpath);
+  if (NS_FAILED(rv)) return rv;
+
+  rv = lf->Normalize();
+  if (NS_FAILED(rv)) return rv;
+
+  NS_ADDREF(*aResult = lf);
+  return NS_OK;
+
 #else
 #error Need platform-specific logic here.
 #endif

@@ -470,6 +470,9 @@ if test -n "$MOZ_DEBUG"; then
     beos*)
         DEFINES="$DEFINES -DDEBUG_${USER}"
         ;;
+    amigaos*)
+    	DEFINES="$DEFINES -DDEBUG_${USERNAME}"
+    	;;
     msvc*|mks*|cygwin*|mingw*|wince*|winmo*|os2*)
         DEFINES="$DEFINES -DDEBUG_`echo ${USERNAME} | sed -e 's| |_|g'`"
         ;;
@@ -764,6 +767,7 @@ if test -n "$CROSS_COMPILE"; then
         winmo*)       OS_ARCH=WINCE ;;
         darwin*)      OS_ARCH=Darwin ;;
         riscos*)      OS_ARCH=RISCOS ;;
+        amigaos*)	  OS_ARCH=AmigaOS OS_RELEASE=4 ;;
     esac
 else
     OS_ARCH=`uname -s | sed -e 's|/|_|g'`
@@ -964,6 +968,9 @@ case "$host" in
 *-beos*)
     HOST_CFLAGS="$HOST_CFLAGS -DXP_BEOS -DBeOS -DBEOS -D_POSIX_SOURCE"
     ;;
+*-amigaos*)
+	HOST_CFLAGS="$HOST_CFLAGS -DXP_AMIGAOS -DAMIGAOS -D_POSIX_SOURCE -use-dynld"
+	;;
 *os2*)
     ;;
 *)
@@ -1035,7 +1042,26 @@ case "$target" in
     PR_MD_CSRCS=aix.c
     RESOLVE_LINK_SYMBOLS=1
     ;;
-        
+
+*-amigaos*)
+	AC_DEFINE(XP_AMIGAOS)
+	AC_DEFINE(AMIGAOS)
+	AC_DEFINE(_POSIX_SOURCE)
+	AC_DEFINE(_PR_GLOBAL_THREADS_ONLY)
+	DSO_CFLAGS=-fPIC
+	DSO_LDOPTS='-shared -Wl,-soname -Wl,$(notdir $@)'
+	MDCPUCFG_H=_amigaos.cfg
+	PR_MD_ARCH_DIR=amigaos
+	MKSHLIB='$(CC) $(DSO_LDOPTS) -o $@'
+	_OPTIMIZE_FLAGS=-O2
+	_DEBUG_FLAGS="-g -fno-inline"
+	CPU_ARCH=powerpc
+	CPU_ARCH_TAG=${CPU_ARCH}
+	AC_DEFINE(__powerpc__)
+	OS_LIBS="$OS_LIBS -ldl"
+	USE_PTHREADS=
+	;;
+	        
 *-beos*)
     AC_DEFINE(XP_BEOS)
     AC_DEFINE(BeOS)
@@ -1063,7 +1089,7 @@ case "$target" in
         ;;
     esac
     ;;
-
+	
 *-bsdi*)
     AC_DEFINE(XP_UNIX)
     AC_DEFINE(BSDI)
@@ -2798,6 +2824,10 @@ if test -n "$USE_PTHREADS"; then
     *-linux*|*-gnu*|*-k*bsd*-gnu)
         AC_DEFINE(_REENTRANT)
         ;;
+    *-amigaos*)
+    	AC_DEFINE(_REENTRANT)
+    	_PTHREAD_LDFLAGS=-lpthread
+    	;;
     esac
 
 else 

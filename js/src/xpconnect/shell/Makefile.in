@@ -65,6 +65,10 @@ endif
 
 LIBS +=	$(NSPR_LIBS)
 
+ifeq ($(MOZ_WIDGET_TOOLKIT),amigaos)
+LIBS += $(MOZ_CAIRO_LIBS)
+endif
+
 NSDISTMODE = copy
 
 ifdef _MSC_VER

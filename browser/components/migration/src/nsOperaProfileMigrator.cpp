@@ -90,6 +90,12 @@
 #define OPERA_PREFERENCES_FILE_NAME NS_LITERAL_STRING("opera.ini")
 #define OPERA_HISTORY_FILE_NAME NS_LITERAL_STRING("global.dat")
 #define OPERA_BOOKMARKS_FILE_NAME NS_LITERAL_STRING("opera.adr")
+#elif defined (XP_AMIGAOS)
+#define OPERA_PREFERENCES_FOLDER_NAME NS_LITERAL_STRING("Opera")
+#define OPERA_PREFERENCES_FILE_NAME NS_LITERAL_STRING("opera.ini")
+#define OPERA_HISTORY_FILE_NAME NS_LITERAL_STRING("global.dat")
+#define OPERA_BOOKMARKS_FILE_NAME NS_LITERAL_STRING("opera.adr")
+
 #else
 #error Need to define location of Opera Profile data.
 #endif

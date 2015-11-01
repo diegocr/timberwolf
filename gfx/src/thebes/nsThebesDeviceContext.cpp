@@ -65,6 +65,9 @@
 #include "gfxPDFSurface.h"
 #include "gfxPSSurface.h"
 static nsSystemFontsGTK2 *gSystemFonts = nsnull;
+#elif defined(XP_AMIGAOS)
+#include "nsSystemFontsAmigaOS.h"
+static nsSystemFontsAmigaOS *gSystemFonts = nsnull;
 #elif XP_WIN
 #include "nsSystemFontsWin.h"
 #include "gfxWindowsSurface.h"
@@ -805,6 +808,8 @@ nsThebesDeviceContext::GetSystemFont(nsSystemFontID aID, nsFont *aFont) const
     if (!gSystemFonts) {
 #ifdef MOZ_ENABLE_GTK2
         gSystemFonts = new nsSystemFontsGTK2();
+#elif defined(XP_AMIGAOS)
+        gSystemFonts = new nsSystemFontsAmigaOS();
 #elif XP_WIN
         gSystemFonts = new nsSystemFontsWin();
 #elif XP_OS2

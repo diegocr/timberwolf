@@ -69,6 +69,10 @@
 #include "gfxQPainterSurface.h"
 #endif
 
+#ifdef CAIRO_HAS_AMIGAOS_SURFACE
+#include "gfxAmigaOSSurface.h"
+#endif
+
 #include <stdio.h>
 #include <limits.h>
 
@@ -500,7 +504,8 @@ static const char *sSurfaceNamesForSurfaceType[] = {
     "gfx/surface/tee",
     "gfx/surface/xml",
     "gfx/surface/skia",
-    "gfx/surface/d2d"
+    "gfx/surface/d2d",
+    "gfx/surface/amigaos",
 };
 
 PR_STATIC_ASSERT(NS_ARRAY_LENGTH(sSurfaceNamesForSurfaceType) == gfxASurface::SurfaceTypeMax);

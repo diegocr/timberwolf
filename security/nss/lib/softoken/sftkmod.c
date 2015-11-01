@@ -58,7 +58,10 @@
 #if defined (_WIN32)
 #include <io.h>
 #endif
-
+#if defined(__amigaos4__)
+#include <stdio.h>
+#include <unistd.h>
+#endif
 /****************************************************************
  *
  * Secmod database.

@@ -71,6 +71,10 @@ extern int h_errno;
 #define _PR_NO_DNS_LOCK
 #endif
 
+#if defined(XP_AMIGAOS)
+#undef _PR_NO_DNS_LOCK
+#endif
+
 #if defined(_PR_NO_DNS_LOCK)
 #define LOCK_DNS()
 #define UNLOCK_DNS()
@@ -79,6 +83,10 @@ PRLock *_pr_dnsLock = NULL;
 #define LOCK_DNS() PR_Lock(_pr_dnsLock)
 #define UNLOCK_DNS() PR_Unlock(_pr_dnsLock)
 #endif  /* defined(_PR_NO_DNS_LOCK) */
+
+#ifdef XP_AMIGAOS
+#include <netdb.h>
+#endif
 
 /*
  * Some platforms have the reentrant getprotobyname_r() and
@@ -134,7 +142,7 @@ extern PRBool _pr_ipv6_is_present(void);
 				((a)->pr_s6_addr32[1] == 0) &&		\
 				((a)->pr_s6_addr32[2] == 0) &&		\
 				((a)->pr_s6_addr32[3] == 0))
- 
+
 #define _PR_IN6_IS_ADDR_LOOPBACK(a)					\
                (((a)->pr_s6_addr32[0] == 0)	&&	\
                ((a)->pr_s6_addr32[1] == 0)		&&	\
@@ -143,7 +151,7 @@ extern PRBool _pr_ipv6_is_present(void);
                ((a)->pr_s6_addr[13] == 0)		&&	\
                ((a)->pr_s6_addr[14] == 0)		&&	\
                ((a)->pr_s6_addr[15] == 0x1U))
- 
+
 const PRIPv6Addr _pr_in6addr_any =	{{{ 0, 0, 0, 0,
 										0, 0, 0, 0,
 										0, 0, 0, 0,
@@ -300,13 +308,13 @@ _pr_QueryNetIfs(void)
             struct sockaddr_in *sin = (struct sockaddr_in *) sa;
             if (sin->sin_addr.s_addr != htonl(INADDR_LOOPBACK)) {
                 _pr_have_inet_if = PR_TRUE;
-            } 
+            }
         } else if (sa->sa_family == AF_INET6) {
             struct sockaddr_in6 *sin6 = (struct sockaddr_in6 *) sa;
             if (!IN6_IS_ADDR_LOOPBACK(&sin6->sin6_addr)
                     && !IN6_IS_ADDR_LINKLOCAL(&sin6->sin6_addr)) {
                 _pr_have_inet6_if = PR_TRUE;
-            } 
+            }
         }
 
 #ifdef _PR_HAVE_SOCKADDR_LEN
@@ -389,15 +397,15 @@ _pr_QueryNetIfs(void)
             struct sockaddr_in *sin = (struct sockaddr_in *) sa;
             if (sin->sin_addr.s_addr != htonl(INADDR_LOOPBACK)) {
                 _pr_have_inet_if = 1;
-            } 
+            }
         } else if (sa->sa_family == AF_INET6) {
             struct sockaddr_in6 *sin6 = (struct sockaddr_in6 *) sa;
             if (!IN6_IS_ADDR_LOOPBACK(&sin6->sin6_addr)
                     && !IN6_IS_ADDR_LINKLOCAL(&sin6->sin6_addr)) {
                 _pr_have_inet6_if = 1;
-            } 
+            }
         }
-    } 
+    }
     freeifaddrs(ifp);
 }
 
@@ -660,7 +668,7 @@ static PRStatus CopyProtoent(
  * #################################################################
  * NOTE: tmphe, tmpbuf, bufsize, h, and h_err are local variables
  * or arguments of PR_GetHostByName, PR_GetIPNodeByName, and
- * PR_GetHostByAddr.  DO NOT CHANGE THE NAMES OF THESE LOCAL 
+ * PR_GetHostByAddr.  DO NOT CHANGE THE NAMES OF THESE LOCAL
  * VARIABLES OR ARGUMENTS.
  * #################################################################
  */
@@ -721,7 +729,7 @@ PR_IMPLEMENT(PRStatus) PR_GetHostByName(
 	LOCK_DNS();
 
 	h = GETHOSTBYNAME(name);
-    
+
 	if (NULL == h)
 	{
 	    PR_SetError(PR_DIRECTORY_LOOKUP_ERROR, _MD_GETHOST_ERRNO());
@@ -759,7 +767,7 @@ static void * _pr_freehostent_fp;
 PRStatus
 _pr_find_getipnodebyname(void)
 {
-    PRLibrary *lib;	
+    PRLibrary *lib;
     PRStatus rv;
 #define GETIPNODEBYNAME "getipnodebyname"
 #define GETIPNODEBYADDR "getipnodebyaddr"
@@ -796,7 +804,7 @@ static PRStatus AppendV4AddrsToHostent(
     PRIntn na, na_old;
     char **ap;
     char **new_addr_list;
-			
+
     /* Count the addresses, then grow storage for the pointers */
     for (na_old = 0, ap = to->h_addr_list; *ap != 0; na_old++, ap++)
         {;} /* nothing to execute */
@@ -907,7 +915,7 @@ PR_IMPLEMENT(PRStatus) PR_GetIPNodeByName(
 #ifdef _PR_INET6_PROBE
           if (_pr_ipv6_is_present())
 #endif
-            h = GETHOSTBYNAME2(name, AF_INET6); 
+            h = GETHOSTBYNAME2(name, AF_INET6);
         }
         if ((NULL == h) && (flags & PR_AI_V4MAPPED)
         && ((flags & PR_AI_ADDRCONFIG) == 0 || _pr_have_inet_if))
@@ -946,7 +954,7 @@ PR_IMPLEMENT(PRStatus) PR_GetIPNodeByName(
     LOCK_DNS();
     h = GETHOSTBYNAME(name);
 #endif /* _PR_INET6 */
-    
+
 	if (NULL == h)
 	{
 #if defined(_PR_INET6) && defined(_PR_HAVE_GETIPNODEBYNAME)
@@ -1616,7 +1624,7 @@ static int StringToV6Addr(const char *string, PRIPv6Addr *addr)
         }
         addr->pr_s6_addr16[section++] = htons((unsigned short)val);
     }
-    
+
     if (*s == '.') {
         /* Have a trailing v4 format address */
         if (section > 6) return 0; /* not enough room */
@@ -1662,13 +1670,13 @@ static int StringToV6Addr(const char *string, PRIPv6Addr *addr)
         addr->pr_s6_addr[2 * section + 1] = val;
         section++;
     }
-    
+
     if (double_colon != -1) {
         /* Stretch the double colon */
         int tosection;
         int ncopy = section - double_colon;
         for (tosection = 7; ncopy--; tosection--) {
-            addr->pr_s6_addr16[tosection] = 
+            addr->pr_s6_addr16[tosection] =
                 addr->pr_s6_addr16[double_colon + ncopy];
         }
         while (tosection >= double_colon) {
@@ -1785,7 +1793,7 @@ static const char *V6AddrToString(
     }
     STUFF('\0');
     return bufcopy;
-#undef STUFF    
+#undef STUFF
 }
 #endif /* !_PR_HAVE_INET_NTOP */
 
@@ -1877,7 +1885,7 @@ typedef struct addrinfo PRADDRINFO;
 
 typedef struct addrinfo PRADDRINFO;
 
-/* getaddrinfo/freeaddrinfo/getnameinfo prototypes */ 
+/* getaddrinfo/freeaddrinfo/getnameinfo prototypes */
 #if defined(WIN32)
 #define FUNC_MODIFIER __stdcall
 #else
@@ -1974,7 +1982,7 @@ _pr_find_getaddrinfo(void)
 #if !defined(_PR_HAVE_GETADDRINFO) || defined(_PR_INET6_PROBE)
 /*
  * If getaddrinfo does not exist, then we will fall back on
- * PR_GetHostByName, which requires that we allocate a buffer for the 
+ * PR_GetHostByName, which requires that we allocate a buffer for the
  * PRHostEnt data structure and its members.
  */
 typedef struct PRAddrInfoFB {
@@ -2161,7 +2169,7 @@ PR_IMPLEMENT(const char *) PR_GetCanonNameFromAddrInfo(const PRAddrInfo *ai)
     if (!_pr_ipv6_is_present()) {
         const PRAddrInfoFB *fb = (const PRAddrInfoFB *) ai;
         return fb->has_cname ? fb->hostent.h_name : NULL;
-    } 
+    }
 #endif
     return ((const PRADDRINFO *) ai)->ai_canonname;
 #else

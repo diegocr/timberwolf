@@ -70,6 +70,10 @@
 #include "prlog.h"
 #include "prprf.h"
 
+#ifdef XP_AMIGAOS
+#include <proto/dos.h>
+#endif
+
 #ifdef PR_LOGGING
 PRLogModuleInfo* gStorageLog = nsnull;
 #endif
@@ -419,6 +423,7 @@ Connection::initialize(nsIFile *aDatabaseFile,
   PR_LOG(gStorageLog, PR_LOG_NOTICE, ("Opening connection to '%s' (%p)",
                                       leafName.get(), this));
 #endif
+
   // Switch db to preferred page size in case the user vacuums.
   sqlite3_stmt *stmt;
   nsCAutoString pageSizeQuery(NS_LITERAL_CSTRING("PRAGMA page_size = "));
@@ -431,6 +436,7 @@ Connection::initialize(nsIFile *aDatabaseFile,
 
   // Register our built-in SQL functions.
   srv = registerFunctions(mDBConn);
+
   if (srv != SQLITE_OK) {
     ::sqlite3_close(mDBConn);
     mDBConn = nsnull;
@@ -439,6 +445,7 @@ Connection::initialize(nsIFile *aDatabaseFile,
 
   // Register our built-in SQL collating sequences.
   srv = registerCollations(mDBConn, mStorageService);
+
   if (srv != SQLITE_OK) {
     ::sqlite3_close(mDBConn);
     mDBConn = nsnull;
@@ -456,14 +463,14 @@ Connection::initialize(nsIFile *aDatabaseFile,
         srv = SQLITE_OK;
     ::sqlite3_finalize(stmt);
   }
-
+#ifndef XP_AMIGAOS
   if (srv != SQLITE_OK) {
     ::sqlite3_close(mDBConn);
     mDBConn = nsnull;
 
     return convertResultCode(srv);
   }
-
+#endif
   // Set the synchronous PRAGMA, according to the preference.
   switch (Service::getSynchronousPref()) {
     case 2:

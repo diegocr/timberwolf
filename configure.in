@@ -1256,6 +1256,7 @@ if test -n "$CROSS_COMPILE"; then
         wince*)       OS_ARCH=WINCE ;;
         winmo*)       OS_ARCH=WINCE ;;
         darwin*)      OS_ARCH=Darwin OS_TARGET=Darwin ;;
+        amigaos*)     OS_ARCH=AmigaOS ;;
     esac
     case "${target}" in
         arm-android-eabi) OS_ARCH=Linux OS_TARGET=Android ;;
@@ -1915,6 +1916,13 @@ dnl ========================================================
 dnl System overrides of the defaults for host
 dnl ========================================================
 case "$host" in
+*-amigaos*)
+	HOST_CFLAGS="$HOST_CFLAGS -DXP_AMIGAOS -D_POSIX_SOURCE -DNO_X11"
+	HOST_NSPR_MDCPUCFG='\"md/_amigaos.cfg\"'
+	HOST_OPTIMIZE_FLAGS="${HOST_OPTIMIZE_FLAGS=-O3}"
+	HOST_LDFLAGS="$HOST_LDFLAGS -use-dynld"
+	;;
+	
 *-beos*)
     HOST_CFLAGS="$HOST_CFLAGS -DXP_BEOS -DBeOS -DBEOS -D_POSIX_SOURCE -DNO_X11"
     HOST_NSPR_MDCPUCFG='\"md/_beos.cfg\"'
@@ -2079,6 +2087,17 @@ case "$target" in
     AC_DEFINE(NSCAP_DISABLE_DEBUG_PTR_TYPES)
     ;;
 
+*-amigaos*)
+	no_x=yes
+	_PLATFROM_DEFAULT_TOOLKIT="cairo-amigaos"
+	DSO_LDOPTS="-shared"
+	MOZ_USER_DIR="Mozilla"
+	LDFLAGS="$LDFLAGS -use-dynld"
+	TARGET_NSPR_MDCPUCFG='\"md/_amigaos.cfg\"'
+	AC_DEFINE(HAVE_VA_LIST_AS_ARRAY)
+	_MOZ_USE_RTTI=1
+	;;
+	
 *-beos*)
     no_x=yes
     MKSHLIB='$(CXX) $(CXXFLAGS) $(DSO_LDOPTS) -Wl,-h,$@ -o $@'
@@ -4524,6 +4543,9 @@ if test "$ac_cv_thread_keyword" = yes; then
     *-android*)
       :
       ;;
+    *-amigaos*)
+      :
+      ;;
     *)
       AC_DEFINE(HAVE_THREAD_TLS_KEYWORD)
       ;;
@@ -5097,7 +5119,7 @@ XPC_IDISPATCH_SUPPORT=
 
 
 case "${target}" in
-*android*|*darwin*|*wince*|*winmo*)
+*android*|*darwin*|*wince*|*winmo*|*amiga*)
     ACCESSIBILITY=
     ;;
 *)
@@ -5238,6 +5260,7 @@ MOZ_ARG_HEADER(Toolkit Options)
                             OS/2 - cairo-os2
                             Win32/WinCE - cairo-windows
                             Gtk2 with DirectFB - cairo-gtk2-dfb
+                            AmigaOS - cairo-amigaos
                             * - cairo-gtk2
                             * - cairo-qt],
     [ _DEFAULT_TOOLKIT=$enableval ],
@@ -5252,7 +5275,8 @@ MOZ_ARG_HEADER(Toolkit Options)
         -o "$_DEFAULT_TOOLKIT" = "cairo-beos" \
         -o "$_DEFAULT_TOOLKIT" = "cairo-os2" \
         -o "$_DEFAULT_TOOLKIT" = "cairo-cocoa" \
-        -o "$_DEFAULT_TOOLKIT" = "cairo-android"
+        -o "$_DEFAULT_TOOLKIT" = "cairo-android" \
+        -o "$_DEFAULT_TOOLKIT" = "cairo-amigaos" 
     then
         dnl nglayout only supports building with one toolkit,
         dnl so ignore everything after the first comma (",").
@@ -5342,6 +5366,13 @@ cairo-beos)
     TK_LIBS='$(MOZ_CAIRO_LIBS)'
     ;;
 
+cairo-amigaos)
+	MOZ_WIDGET_TOOLKIT=amigaos
+	MOZ_GFX_TOOLKIT=cairo
+    TK_CFLAGS='$(MOZ_CAIRO_CFLAGS)'
+    TK_LIBS='$(MOZ_CAIRO_LIBS)'
+    ;;
+    
 cairo-os2)
     MOZ_WIDGET_TOOLKIT=os2
     USE_FC_FREETYPE=1
@@ -7050,6 +7081,14 @@ else
         AC_MSG_ERROR([System SQLite library is not compiled with SQLITE_ENABLE_UNLOCK_NOTIFY.])
     fi
 fi
+
+case "$target" in
+*-amigaos*)
+    MOZ_NATIVE_SQLITE=1
+    SQLITE_CFLAGS=-use-dynld
+    SQLITE_LIBS=-lsqlite3
+    ;;
+esac
 
 AC_SUBST(MOZ_NATIVE_SQLITE)
 
@@ -8794,15 +8833,26 @@ if test "$MOZ_TREE_CAIRO"; then
     mv -f $CAIRO_FEATURES_H "$CAIRO_FEATURES_H".orig 2> /dev/null
 
 else
-   PKG_CHECK_MODULES(CAIRO, cairo >= $CAIRO_VERSION pixman-1 freetype2 fontconfig)
-   MOZ_CAIRO_CFLAGS=$CAIRO_CFLAGS
-   MOZ_CAIRO_LIBS=$CAIRO_LIBS
-   PKG_CHECK_MODULES(CAIRO_TEE, cairo-tee >= $CAIRO_VERSION)
-   if test "$MOZ_X11"; then
-        PKG_CHECK_MODULES(CAIRO_XRENDER, cairo-xlib-xrender >= $CAIRO_VERSION)
-        MOZ_CAIRO_LIBS="$MOZ_CAIRO_LIBS $XLDFLAGS $CAIRO_XRENDER_LIBS"
-        MOZ_CAIRO_CFLAGS="$MOZ_CAIRO_CFLAGS $CAIRO_XRENDER_CFLAGS"
-   fi
+	case "$target" in
+	*-amigaos*)
+	    CAIRO_CFLAGS='-I/SDK/local/newlib/include/cairo -I/SDK/local/newlib/include/pixman-1 -I/SDK/local/newlib/include/freetype2 -I/SDK/local/newlib/include/libpng12'
+	    CAIRO_LIBS='-L/SDK/local/newlib/lib -Wl,-rpath-link,/SDK/local/newlib/lib -lcairo -lfreetype -lfontconfig -lpixman-1 -lpng12 -lz -lexpat';
+	    MOZ_CAIRO_CFLAGS=$CAIRO_CFLAGS
+	    MOZ_CAIRO_LIBS=$CAIRO_LIBS
+	    MOZ_TREE_CAIRO=
+	    MOZ_TREE_PIXMAN=
+	    ;;
+	*)
+	  	PKG_CHECK_MODULES(CAIRO, cairo >= $CAIRO_VERSION pixman-1 freetype2 fontconfig)
+   		MOZ_CAIRO_CFLAGS=$CAIRO_CFLAGS
+   		MOZ_CAIRO_LIBS=$CAIRO_LIBS
+   		if test "$MOZ_X11"; then
+        	PKG_CHECK_MODULES(CAIRO_XRENDER, cairo-xlib-xrender >= $CAIRO_VERSION)
+        	MOZ_CAIRO_LIBS="$MOZ_CAIRO_LIBS $XLDFLAGS $CAIRO_XRENDER_LIBS"
+        	MOZ_CAIRO_CFLAGS="$MOZ_CAIRO_CFLAGS $CAIRO_XRENDER_CFLAGS"
+   		fi
+   		;;
+   	esac
 fi
 
 AC_SUBST(MOZ_TREE_CAIRO)
@@ -9387,6 +9437,8 @@ dnl ========================================================
 
 if test "$OS_ARCH" = "BeOS"; then
   AC_DEFINE(XP_BEOS)
+elif test "$OS_ARCH" = "AmigaOS"; then
+  AC_DEFINE(XP_AMIGAOS)
 elif test "$OS_ARCH" = "Darwin"; then
   AC_DEFINE(XP_UNIX)
   AC_DEFINE(UNIX_ASYNC_DNS)

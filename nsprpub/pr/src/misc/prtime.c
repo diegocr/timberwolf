@@ -53,7 +53,7 @@
 #include <errno.h>  /* for EINVAL */
 #include <time.h>
 
-/* 
+/*
  * The COUNT_LEAPS macro counts the number of leap years passed by
  * till the start of the given year Y.  At the start of the year 4
  * A.D. the number of leap years passed by is 0, while at the start of
@@ -273,7 +273,7 @@ PR_ImplodeTime(const PRExplodedTime *exploded)
     PR_NormalizeTime(&copy, PR_GMTParameters);
 
     numDays = DAYS_BETWEEN_YEARS(1970, copy.tm_year);
-    
+
     numSecs = copy.tm_yday * 86400 + copy.tm_hour * 3600
             + copy.tm_min * 60 + copy.tm_sec;
 
@@ -476,7 +476,7 @@ PR_NormalizeTime(PRExplodedTime *time, PRTimeParamFn params)
     /* Recompute yday and wday */
     time->tm_yday = time->tm_mday +
             lastDayOfMonth[IsLeapYear(time->tm_year)][time->tm_month];
-	    
+
     numDays = DAYS_BETWEEN_YEARS(1970, time->tm_year) + time->tm_yday;
     time->tm_wday = (numDays + 4) % 7;
     if (time->tm_wday < 0) {
@@ -496,7 +496,7 @@ PR_NormalizeTime(PRExplodedTime *time, PRTimeParamFn params)
  *-------------------------------------------------------------------------
  *
  * PR_LocalTimeParameters --
- * 
+ *
  *     returns the time parameters for the local time zone
  *
  *     The following uses localtime() from the standard C library.
@@ -513,7 +513,7 @@ PR_NormalizeTime(PRExplodedTime *time, PRTimeParamFn params)
  * In this case we could define the macro as
  *     #define MT_safe_localtime(timer, result) \
  *             (localtime_r(timer, result) == 0 ? result : NULL)
- * I chose to compare the return value of localtime_r with -1 so 
+ * I chose to compare the return value of localtime_r with -1 so
  * that I can catch the cases where localtime_r returns a pointer
  * to struct tm.  The macro definition above would not be able to
  * detect such mistakes because it is legal to compare a pointer
@@ -557,7 +557,7 @@ static struct tm *MT_safe_localtime(const time_t *clock, struct tm *result)
      * clock plus ULONG_MAX. So we also have to check for the invalid
      * structs returned for timezones west of Greenwich when clock == 0.
      */
-    
+
     tmPtr = localtime(clock);
 
 #if defined(WIN16) || defined(XP_OS2)
@@ -604,7 +604,7 @@ void _PR_CleanupTime(void)
 #endif
 }
 
-#if defined(XP_UNIX) || defined(XP_PC) || defined(XP_BEOS)
+#if defined(XP_UNIX) || defined(XP_PC) || defined(XP_BEOS) || defined(XP_AMIGAOS)
 
 PR_IMPLEMENT(PRTimeParameters)
 PR_LocalTimeParameters(const PRExplodedTime *gmt)
@@ -642,7 +642,7 @@ PR_LocalTimeParameters(const PRExplodedTime *gmt)
 
     /* GMT is 00:00:00, 2nd of Jan. */
 
-    offset2Jan1970 = (PRInt32)localTime.tm_sec 
+    offset2Jan1970 = (PRInt32)localTime.tm_sec
             + 60L * (PRInt32)localTime.tm_min
             + 3600L * (PRInt32)localTime.tm_hour
             + 86400L * (PRInt32)((PRInt32)localTime.tm_mday - 2L);
@@ -696,7 +696,7 @@ PR_LocalTimeParameters(const PRExplodedTime *gmt)
     }
 
     /*
-     * dayOffset is the offset between local time and GMT in 
+     * dayOffset is the offset between local time and GMT in
      * the day component, which can only be -1, 0, or 1.  We
      * use the day of the week to compute dayOffset.
      */
@@ -745,7 +745,7 @@ PR_LocalTimeParameters(const PRExplodedTime *gmt)
             retVal.tp_dst_offset = 3600;
         }
     }
-    
+
     return retVal;
 }
 
@@ -764,26 +764,26 @@ PR_LocalTimeParameters(const PRExplodedTime *gmt)
 /*
  * Returns the mday of the first sunday of the month, where
  * mday and wday are for a given day in the month.
- * mdays start with 1 (e.g. 1..31).  
+ * mdays start with 1 (e.g. 1..31).
  * wdays start with 0 and are in the range 0..6.  0 = Sunday.
  */
 #define firstSunday(mday, wday) (((mday - wday + 7 - 1) % 7) + 1)
 
 /*
- * Returns the mday for the N'th Sunday of the month, where 
+ * Returns the mday for the N'th Sunday of the month, where
  * mday and wday are for a given day in the month.
- * mdays start with 1 (e.g. 1..31).  
+ * mdays start with 1 (e.g. 1..31).
  * wdays start with 0 and are in the range 0..6.  0 = Sunday.
  * N has the following values: 0 = first, 1 = second (etc), -1 = last.
- * ndays is the number of days in that month, the same value as the 
+ * ndays is the number of days in that month, the same value as the
  * mday of the last day of the month.
  */
-static PRInt32 
-NthSunday(PRInt32 mday, PRInt32 wday, PRInt32 N, PRInt32 ndays) 
+static PRInt32
+NthSunday(PRInt32 mday, PRInt32 wday, PRInt32 N, PRInt32 ndays)
 {
     PRInt32 firstSun = firstSunday(mday, wday);
 
-    if (N < 0) 
+    if (N < 0)
         N = (ndays - firstSun) / 7;
     return firstSun + (7 * N);
 }
@@ -850,8 +850,8 @@ PR_USPacificTimeParameters(const PRExplodedTime *gmt)
     if (st.tm_month < dst->dst_start_month) {
         retVal.tp_dst_offset = 0L;
     } else if (st.tm_month == dst->dst_start_month) {
-	int NthSun = NthSunday(st.tm_mday, st.tm_wday, 
-			       dst->dst_start_Nth_Sunday, 
+	int NthSun = NthSunday(st.tm_mday, st.tm_wday,
+			       dst->dst_start_Nth_Sunday,
 			       dst->dst_start_month_ndays);
 	if (st.tm_mday < NthSun) {              /* Before starting Sunday */
 	    retVal.tp_dst_offset = 0L;
@@ -868,8 +868,8 @@ PR_USPacificTimeParameters(const PRExplodedTime *gmt)
     } else if (st.tm_month < dst->dst_end_month) {
         retVal.tp_dst_offset = 3600L;
     } else if (st.tm_month == dst->dst_end_month) {
-	int NthSun = NthSunday(st.tm_mday, st.tm_wday, 
-			       dst->dst_end_Nth_Sunday, 
+	int NthSun = NthSunday(st.tm_mday, st.tm_wday,
+			       dst->dst_end_Nth_Sunday,
 			       dst->dst_end_month_ndays);
 	if (st.tm_mday < NthSun) {              /* Before ending Sunday */
 	    retVal.tp_dst_offset = 3600L;
@@ -1496,7 +1496,7 @@ PR_ParseTimeStringToExplodedTime(
 
           /* "-" is ignored at the beginning of a token if we have not yet
                  parsed a year (e.g., the second "-" in "30-AUG-1966"), or if
-                 the character after the dash is not a digit. */         
+                 the character after the dash is not a digit. */
           if (*rest == '-' && ((rest > string && isalpha(rest[-1]) && year < 0)
               || rest[1] < '0' || rest[1] > '9'))
                 {
@@ -1585,14 +1585,14 @@ PR_ParseTimeStringToExplodedTime(
              * time, we call mktime().  However, we need to see if we are
              * on 1-Jan-1970 or before.  If we are, we can't call mktime()
              * because mktime() will crash on win16. In that case, we
-             * calculate zone_offset based on the zone offset at 
+             * calculate zone_offset based on the zone offset at
              * 00:00:00, 2 Jan 1970 GMT, and subtract zone_offset from the
              * date we are parsing to transform the date to GMT.  We also
              * do so if mktime() returns (time_t) -1 (time out of range).
            */
 
           /* month, day, hours, mins and secs are always non-negative
-             so we dont need to worry about them. */  
+             so we dont need to worry about them. */
           if(result->tm_year >= 1970)
                 {
                   PRInt64 usec_per_sec;
@@ -1613,7 +1613,7 @@ PR_ParseTimeStringToExplodedTime(
                   /*
                    * mktime will return (time_t) -1 if the input is a date
                    * after 23:59:59, December 31, 3000, US Pacific Time (not
-                   * UTC as documented): 
+                   * UTC as documented):
                    * http://msdn.microsoft.com/en-us/library/d1y53h2a(VS.80).aspx
                    * But if the year is 3001, mktime also invokes the invalid
                    * parameter handler, causing the application to crash.  This
@@ -1644,7 +1644,7 @@ PR_ParseTimeStringToExplodedTime(
                       return PR_SUCCESS;
                     }
                 }
-                
+
                 /* So mktime() can't handle this case.  We assume the
                    zone_offset for the date we are parsing is the same as
                    the zone offset on 00:00:00 2 Jan 1970 GMT. */
@@ -1771,7 +1771,7 @@ static const char* abbrevMonths[] =
 };
 
 static const char* months[] =
-{ 
+{
     "January", "February", "March", "April", "May", "June",
     "July", "August", "September", "October", "November", "December"
 };
@@ -1830,17 +1830,17 @@ static unsigned int  pr_WeekOfYear(const PRExplodedTime* time,
  *  needed to write things like MIME headers which must always be in US English.
  *
  **********************************************************************************/
-             
+
 PR_IMPLEMENT(PRUint32)
 PR_FormatTimeUSEnglish( char* buf, PRUint32 bufSize,
                         const char* format, const PRExplodedTime* time )
 {
    char*         bufPtr = buf;
    const char*   fmtPtr;
-   char          tmpBuf[ 40 ];        
+   char          tmpBuf[ 40 ];
    const int     tmpBufSize = sizeof( tmpBuf );
 
-   
+
    for( fmtPtr=format; *fmtPtr != '\0'; fmtPtr++ )
    {
       if( *fmtPtr != '%' )
@@ -1855,130 +1855,130 @@ PR_FormatTimeUSEnglish( char* buf, PRUint32 bufSize,
             /* escaped '%' character */
             ADDCHAR( bufPtr, bufSize, '%' );
             break;
-            
+
          case 'a':
             /* abbreviated weekday name */
             ADDSTR( bufPtr, bufSize, abbrevDays[ time->tm_wday ] );
             break;
-               
+
          case 'A':
             /* full weekday name */
             ADDSTR( bufPtr, bufSize, days[ time->tm_wday ] );
             break;
-        
+
          case 'b':
             /* abbreviated month name */
             ADDSTR( bufPtr, bufSize, abbrevMonths[ time->tm_month ] );
             break;
-        
+
          case 'B':
             /* full month name */
             ADDSTR(bufPtr, bufSize,  months[ time->tm_month ] );
             break;
-        
+
          case 'c':
             /* Date and time. */
             PR_FormatTimeUSEnglish( tmpBuf, tmpBufSize, "%a %b %d %H:%M:%S %Y", time );
             ADDSTR( bufPtr, bufSize, tmpBuf );
             break;
-        
+
          case 'd':
             /* day of month ( 01 - 31 ) */
             PR_snprintf(tmpBuf,tmpBufSize,"%.2ld",time->tm_mday );
-            ADDSTR( bufPtr, bufSize, tmpBuf ); 
+            ADDSTR( bufPtr, bufSize, tmpBuf );
             break;
 
          case 'H':
             /* hour ( 00 - 23 ) */
             PR_snprintf(tmpBuf,tmpBufSize,"%.2ld",time->tm_hour );
-            ADDSTR( bufPtr, bufSize, tmpBuf ); 
+            ADDSTR( bufPtr, bufSize, tmpBuf );
             break;
-        
+
          case 'I':
             /* hour ( 01 - 12 ) */
             PR_snprintf(tmpBuf,tmpBufSize,"%.2ld",
                         (time->tm_hour%12) ? time->tm_hour%12 : (PRInt32) 12 );
-            ADDSTR( bufPtr, bufSize, tmpBuf ); 
+            ADDSTR( bufPtr, bufSize, tmpBuf );
             break;
-        
+
          case 'j':
             /* day number of year ( 001 - 366 ) */
             PR_snprintf(tmpBuf,tmpBufSize,"%.3d",time->tm_yday + 1);
-            ADDSTR( bufPtr, bufSize, tmpBuf ); 
+            ADDSTR( bufPtr, bufSize, tmpBuf );
             break;
-        
+
          case 'm':
             /* month number ( 01 - 12 ) */
             PR_snprintf(tmpBuf,tmpBufSize,"%.2ld",time->tm_month+1);
-            ADDSTR( bufPtr, bufSize, tmpBuf ); 
+            ADDSTR( bufPtr, bufSize, tmpBuf );
             break;
-        
+
          case 'M':
             /* minute ( 00 - 59 ) */
             PR_snprintf(tmpBuf,tmpBufSize,"%.2ld",time->tm_min );
-            ADDSTR( bufPtr, bufSize, tmpBuf ); 
+            ADDSTR( bufPtr, bufSize, tmpBuf );
             break;
-       
+
          case 'p':
             /* locale's equivalent of either AM or PM */
-            ADDSTR( bufPtr, bufSize, (time->tm_hour<12)?"AM":"PM" ); 
+            ADDSTR( bufPtr, bufSize, (time->tm_hour<12)?"AM":"PM" );
             break;
-        
+
          case 'S':
             /* seconds ( 00 - 61 ), allows for leap seconds */
             PR_snprintf(tmpBuf,tmpBufSize,"%.2ld",time->tm_sec );
-            ADDSTR( bufPtr, bufSize, tmpBuf ); 
+            ADDSTR( bufPtr, bufSize, tmpBuf );
             break;
-     
+
          case 'U':
             /* week number of year ( 00 - 53  ),  Sunday  is  the first day of week 1 */
             PR_snprintf(tmpBuf,tmpBufSize,"%.2d", pr_WeekOfYear( time, 0 ) );
             ADDSTR( bufPtr, bufSize, tmpBuf );
             break;
-        
+
          case 'w':
             /* weekday number ( 0 - 6 ), Sunday = 0 */
             PR_snprintf(tmpBuf,tmpBufSize,"%d",time->tm_wday );
-            ADDSTR( bufPtr, bufSize, tmpBuf ); 
+            ADDSTR( bufPtr, bufSize, tmpBuf );
             break;
-        
+
          case 'W':
             /* Week number of year ( 00 - 53  ),  Monday  is  the first day of week 1 */
             PR_snprintf(tmpBuf,tmpBufSize,"%.2d", pr_WeekOfYear( time, 1 ) );
             ADDSTR( bufPtr, bufSize, tmpBuf );
             break;
-        
+
          case 'x':
             /* Date representation */
             PR_FormatTimeUSEnglish( tmpBuf, tmpBufSize, "%m/%d/%y", time );
             ADDSTR( bufPtr, bufSize, tmpBuf );
             break;
-        
+
          case 'X':
             /* Time representation. */
             PR_FormatTimeUSEnglish( tmpBuf, tmpBufSize, "%H:%M:%S", time );
             ADDSTR( bufPtr, bufSize, tmpBuf );
             break;
-        
+
          case 'y':
             /* year within century ( 00 - 99 ) */
             PR_snprintf(tmpBuf,tmpBufSize,"%.2d",time->tm_year % 100 );
-            ADDSTR( bufPtr, bufSize, tmpBuf ); 
+            ADDSTR( bufPtr, bufSize, tmpBuf );
             break;
-        
+
          case 'Y':
             /* year as ccyy ( for example 1986 ) */
             PR_snprintf(tmpBuf,tmpBufSize,"%.4d",time->tm_year );
-            ADDSTR( bufPtr, bufSize, tmpBuf ); 
+            ADDSTR( bufPtr, bufSize, tmpBuf );
             break;
-        
+
          case 'Z':
             /* Time zone name or no characters if  no  time  zone exists.
              * Since time zone name is supposed to be independant of locale, we
              * defer to PR_FormatTime() for this option.
              */
             PR_FormatTime( tmpBuf, tmpBufSize, "%Z", time );
-            ADDSTR( bufPtr, bufSize, tmpBuf ); 
+            ADDSTR( bufPtr, bufSize, tmpBuf );
             break;
 
          default:
@@ -1986,7 +1986,7 @@ PR_FormatTimeUSEnglish( char* buf, PRUint32 bufSize,
             ADDCHAR( bufPtr, bufSize, '%' );
             ADDCHAR( bufPtr, bufSize, *fmtPtr );
             break;
-            
+
          }
       }
    }
@@ -2003,7 +2003,7 @@ PR_FormatTimeUSEnglish( char* buf, PRUint32 bufSize,
  *  Returns the week number of the year (0-53) for the given time.  firstDayOfWeek
  *  is the day on which the week is considered to start (0=Sun, 1=Mon, ...).
  *  Week 1 starts the first time firstDayOfWeek occurs in the year.  In other words,
- *  a partial week at the start of the year is considered week 0.  
+ *  a partial week at the start of the year is considered week 0.
  *
  **********************************************************************************/
 
@@ -2019,7 +2019,7 @@ pr_WeekOfYear(const PRExplodedTime* time, unsigned int firstDayOfWeek)
   dayOfWeek = time->tm_wday - firstDayOfWeek;
   if (dayOfWeek < 0)
     dayOfWeek += 7;
-  
+
   dayOfYear = time->tm_yday - dayOfWeek;
 
 

@@ -159,7 +159,7 @@ nsAutoString *gWorkingDirectory = nsnull;
 static JSBool
 GetLocationProperty(JSContext *cx, JSObject *obj, jsid id, jsval *vp)
 {
-#if (!defined(XP_WIN) && !defined(XP_UNIX)) || defined(WINCE)
+#if (!defined(XP_WIN) && !defined(XP_UNIX))  && !defined(XP_AMIGAOS)  || defined(WINCE)
     //XXX: your platform should really implement this
     return JS_FALSE;
 #else
@@ -195,7 +195,7 @@ GetLocationProperty(JSContext *cx, JSObject *obj, jsid id, jsval *vp)
                 *start = L'\\';
             start++;
         }
-#elif defined(XP_UNIX)
+#elif defined(XP_UNIX) || defined(XP_AMIGAOS)
         NS_ConvertUTF8toUTF16 filenameString(filename);
 #endif
 

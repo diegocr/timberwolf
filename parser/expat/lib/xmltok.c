@@ -8,7 +8,7 @@
 #include "winconfig.h"
 #elif defined(MACOS_CLASSIC)
 #include "macconfig.h"
-#elif defined(__amigaos4__)
+#elif defined(__amigaos4__) && !defined(HAVE_EXPAT_CONFIG_H)
 #include "amigaconfig.h"
 #else
 #ifdef HAVE_EXPAT_CONFIG_H

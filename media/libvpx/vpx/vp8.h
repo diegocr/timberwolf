@@ -32,6 +32,16 @@
 #define VP8_H
 #include "vpx/vpx_codec_impl_top.h"
 
+
+#ifdef __amigaos4__
+#  if !defined(DEPRECATED)
+#    define DEPRECATED          __attribute__ ((deprecated))
+#  endif
+#  if !defined(DECLSPEC_DEPRECATED)
+#    define DECLSPEC_DEPRECATED
+#  endif
+#endif
+
 /*!\brief Control functions
  *
  * The set of macros define the control functions of VP8 interface

@@ -89,6 +89,10 @@ static char sccsid[] = "@(#)hash_page.c	8.7 (Berkeley) 8/16/94";
 
 extern int mkstempflags(char *path, int extraFlags);
 
+#if defined(XP_AMIGAOS)
+extern int mkstemp(char *);
+#endif
+
 static uint32	*fetch_bitmap __P((HTAB *, uint32));
 static uint32	 first_free __P((uint32));
 static int	 open_temp __P((HTAB *));

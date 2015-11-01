@@ -44,6 +44,13 @@
 #include <kernel/OS.h>
 #endif
 
+#if defined(XP_AMIGAOS)
+#include <proto/exec.h>
+#include <exec/exectags.h>
+#include <exec/execbase.h>
+#include <proto/expansion.h>
+#endif
+
 #if defined(OS2)
 #define INCL_DOS
 #define INCL_DOSMISC
@@ -153,13 +160,13 @@ PR_IMPLEMENT(PRStatus) PR_GetSystemInfo(PRSysInfo cmd, char *buf, PRUint32 bufle
                     break;
                 }
                 len += 1;
-            }    
+            }
 #endif
          break;
 
       case PR_SI_SYSNAME:
         /* Return the operating system name */
-#if defined(XP_UNIX) || defined(WIN32)
+#if defined(XP_UNIX) || defined(WIN32) || defined(XP_AMIGAOS)
         if (PR_FAILURE == _PR_MD_GETSYSINFO(cmd, buf, (PRUintn)buflen))
             return PR_FAILURE;
 #else
@@ -169,7 +176,7 @@ PR_IMPLEMENT(PRStatus) PR_GetSystemInfo(PRSysInfo cmd, char *buf, PRUint32 bufle
 
       case PR_SI_RELEASE:
         /* Return the version of the operating system */
-#if defined(XP_UNIX) || defined(WIN32)
+#if defined(XP_UNIX) || defined(WIN32) || defined(XP_AMIGAOS)
         if (PR_FAILURE == _PR_MD_GETSYSINFO(cmd, buf, (PRUintn)buflen))
             return PR_FAILURE;
 #endif
@@ -206,7 +213,7 @@ PR_IMPLEMENT(PRStatus) PR_GetSystemInfo(PRSysInfo cmd, char *buf, PRUint32 bufle
 
 /*
 ** PR_GetNumberOfProcessors()
-** 
+**
 ** Implementation notes:
 **   Every platform does it a bit different.
 **     numCpus is the returned value.
@@ -216,7 +223,7 @@ PR_IMPLEMENT(PRStatus) PR_GetSystemInfo(PRSysInfo cmd, char *buf, PRUint32 bufle
 **   order of the if defined()s may be important,
 **     especially for unix variants. Do platform
 **     specific implementations before XP_UNIX.
-** 
+**
 */
 PR_IMPLEMENT(PRInt32) PR_GetNumberOfProcessors( void )
 {
@@ -257,6 +264,10 @@ PR_IMPLEMENT(PRInt32) PR_GetNumberOfProcessors( void )
     numCpus = 1;
 #elif defined(XP_UNIX)
     numCpus = sysconf( _SC_NPROCESSORS_ONLN );
+#elif defined(XP_AMIGAOS)
+    IExec->GetCPUInfoTags(
+	GCIT_NumberOfCPUs, &numCpus,
+    TAG_DONE);
 #else
 #error "An implementation is required"
 #endif
@@ -265,14 +276,14 @@ PR_IMPLEMENT(PRInt32) PR_GetNumberOfProcessors( void )
 
 /*
 ** PR_GetPhysicalMemorySize()
-** 
+**
 ** Implementation notes:
 **   Every platform does it a bit different.
 **     bytes is the returned value.
 **   for each platform's "if defined" section
 **     declare your local variable
 **     do your thing, assign to bytes.
-** 
+**
 */
 PR_IMPLEMENT(PRUint64) PR_GetPhysicalMemorySize(void)
 {
@@ -363,7 +374,19 @@ PR_IMPLEMENT(PRUint64) PR_GetPhysicalMemorySize(void)
         }
         odm_terminate();
     }
-
+#elif defined(__amigaos4__)
+    {
+	struct Library *ExpansionBase = IExec->OpenLibrary("expansion.library", 0);
+	struct ExpansionIFace *IExpansion =
+		(struct ExpansionIFace *)IExec->GetInterface(ExpansionBase, "main", 1, NULL);
+	uint32 memsize;
+	IExpansion->GetMachineInfoTags(
+	    GMIT_MemorySize,	&memsize,
+	TAG_DONE);
+	IExec->DropInterface((struct Interface *)IExpansion);
+	IExec->CloseLibrary(ExpansionBase);
+	bytes = memsize;
+    }
 #else
 
     PR_SetError(PR_NOT_IMPLEMENTED_ERROR, 0);

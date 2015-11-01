@@ -54,6 +54,8 @@
 #include "gfxBeOSPlatform.h"
 #elif defined(XP_OS2)
 #include "gfxOS2Platform.h"
+#elif defined(XP_AMIGAOS)
+#include "gfxAmigaOSPlatform.h"
 #elif defined(ANDROID)
 #include "gfxAndroidPlatform.h"
 #endif
@@ -274,6 +276,8 @@ gfxPlatform::Init()
     gPlatform = new gfxBeOSPlatform;
 #elif defined(XP_OS2)
     gPlatform = new gfxOS2Platform;
+#elif defined(XP_AMIGAOS)
+    gPlatform = new gfxAmigaOSPlatform;
 #elif defined(ANDROID)
     gPlatform = new gfxAndroidPlatform;
 #endif

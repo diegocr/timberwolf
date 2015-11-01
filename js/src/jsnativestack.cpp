@@ -54,6 +54,11 @@
 #  include <pthread_np.h>
 # endif
 
+#elif defined(XP_AMIGAOS)
+
+# include <proto/exec.h>
+# include <pthread.h>
+
 #else
 # error "Unsupported platform"
 
@@ -182,6 +187,14 @@ GetNativeStackBaseImpl()
     stack_t st;
     stack_getbounds(&st);
     return static_cast<char*>(st.ss_sp) + st.ss_size;
+}
+
+#elif defined(XP_AMIGAOS)
+void *
+GetNativeStackBaseImpl()
+{
+	struct Task *task = IExec->FindTask(0);
+	return task->tc_SPUpper;
 }
 
 #else /* XP_UNIX */

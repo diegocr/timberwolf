@@ -51,6 +51,10 @@
 # include <arpa/inet.h>
 #endif
 
+#if defined(XP_AMIGAOS)
+#include <netinet/in.h>
+#endif
+
 #ifndef SSIZE_MAX
 # define SSIZE_MAX LONG_MAX
 #endif

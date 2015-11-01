@@ -49,7 +49,7 @@ class PluginPRLibrary : public PluginLibrary
 {
 public:
     PluginPRLibrary(const char* aFilePath, PRLibrary* aLibrary) :
-#if defined(XP_UNIX) && !defined(XP_MACOSX)
+#if defined(XP_UNIX) && !defined(XP_MACOSX) || defined(XP_AMIGAOS)
         mNP_Initialize(nsnull),
 #else
         mNP_Initialize(nsnull),
@@ -96,7 +96,7 @@ public:
             return false;
 #endif
 
-#if defined(XP_UNIX) && !defined(XP_MACOSX)
+#if defined(XP_UNIX) && !defined(XP_MACOSX) || defined(XP_AMIGAOS)
         mNP_GetValue = (NP_GetValueFunc)
             PR_FindFunctionSymbol(mLibrary, "NP_GetValue");
         if (!mNP_GetValue)
@@ -112,7 +112,7 @@ public:
         return true;
     }
 
-#if defined(XP_UNIX) && !defined(XP_MACOSX)
+#if defined(XP_UNIX) && !defined(XP_MACOSX) || defined(XP_AMIGAOS)
     virtual nsresult NP_Initialize(NPNetscapeFuncs* bFuncs,
                                    NPPluginFuncs* pFuncs, NPError* error);
 #else
@@ -160,7 +160,7 @@ private:
     NP_InitializeFunc mNP_Initialize;
     NP_ShutdownFunc mNP_Shutdown;
     NP_GetMIMEDescriptionFunc mNP_GetMIMEDescription;
-#if defined(XP_UNIX) && !defined(XP_MACOSX)
+#if defined(XP_UNIX) && !defined(XP_MACOSX) || defined(XP_AMIGAOS)
     NP_GetValueFunc mNP_GetValue;
 #endif
 #if defined(XP_WIN) || defined(XP_MACOSX) || defined(XP_OS2)

@@ -185,6 +185,16 @@ void LaunchMacPostProcess(const char* aAppExe);
 #define USE_EXECV
 #endif
 
+
+#if defined(XP_AMIGAOS)
+#include <proto/dos.h>
+#include <proto/exec.h>
+#include <string>
+
+extern struct DOSIFace *IDOS;
+extern struct ExecIFace *IExec;
+#endif
+
 #ifdef XP_WIN
 #ifdef WINCE
 #define EXIT_WHEN_ELEVATED(path, handle, retCode)
@@ -306,7 +316,7 @@ private:
   void      *mThreadParam;
 };
 
-#elif defined(XP_UNIX)
+#elif defined(XP_UNIX) || defined(XP_AMIGAOS)
 #include <pthread.h>
 
 class Thread
@@ -1375,6 +1385,14 @@ LaunchWinPostProcess(const WCHAR *appExe)
 #endif // WINCE
 #endif
 
+#if defined (XP_AMIGAOS)
+static void
+SignalParentTask(long rc, struct Task *sigTask)
+{
+	IExec->Signal(sigTask, SIGF_SINGLE);
+}
+#endif
+
 #ifdef WINCE
 static char*
 AllocConvertUTF16toUTF8(const WCHAR *arg)
@@ -1442,6 +1460,24 @@ LaunchCallbackApp(const NS_tchar *workingDir, int argc, NS_tchar **argv)
   winceArgv[winceArgc + 1] = NULL;
   WinLaunchChild(argv[0], winceArgc, winceArgv);
   free(winceArgv);
+#elif defined(XP_AMIGAOS)
+  std::string commandline;
+  int i;
+
+  commandline = argv[0];
+  commandline += " ";
+
+  for (i = 1; i < argc; i++)
+  {
+	  commandline += "\"";
+	  commandline += argv[i];
+	  commandline += "\" ";
+  }
+
+  IDOS->SystemTags(commandline.c_str(), "Mozilla Updater",
+		  NP_ExitCode,	SignalParentTask,
+		  NP_ExitData,  IExec->FindTask(0),
+		  TAG_DONE);
 #else
 # warning "Need implementaton of LaunchCallbackApp"
 #endif
@@ -1580,6 +1616,8 @@ int NS_main(int argc, NS_tchar **argv)
         if (result != WAIT_OBJECT_0)
           return 1;
       }
+#elif defined(XP_AMIGAOS)
+      IExec->Wait(SIGF_SINGLE);
 #else
       waitpid(pid, NULL, 0);
 #endif

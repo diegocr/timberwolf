@@ -42,6 +42,15 @@
 
 #if defined(_PR_PTHREADS)
 
+#ifdef __amigaos4__
+#include <sys/types.h>
+#include "prinet.h"
+//typedef unsigned char   u_char;
+//typedef unsigned short  u_short;
+//typedef unsigned int    u_int;
+//typedef unsigned long   u_long;
+//#define _amigaos4_u_types_defined 1
+#endif
 #if defined(_PR_POLL_WITH_SELECT)
 #if !(defined(HPUX) && defined(_USE_BIG_FDS))
 /* set fd limit for select(), before including system header files */
@@ -191,6 +200,14 @@ static ssize_t (*pt_aix_sendfile_fptr)() = NULL;
 #include <netinet/tcp.h>  /* TCP_NODELAY, TCP_MAXSEG */
 #endif
 
+#ifdef __amigaos4__
+int poll(struct pollfd *fds, PRIntn nfds, int timeout)
+{
+	PR_ASSERT(1);
+	return EINVAL;
+}
+#endif
+
 #ifdef LINUX
 /* TCP_CORK is not defined in <netinet/tcp.h> on Red Hat Linux 6.0 */
 #ifndef TCP_CORK
@@ -212,7 +229,7 @@ static PRBool _pr_ipv6_v6only_on_by_default;
     || defined(LINUX) || defined(__GNU__) || defined(__GLIBC__) \
     || defined(FREEBSD) || defined(NETBSD) || defined(OPENBSD) \
     || defined(BSDI) || defined(NTO) || defined(DARWIN) \
-    || defined(UNIXWARE) || defined(RISCOS) || defined(SYMBIAN)
+    || defined(UNIXWARE) || defined(RISCOS) || defined(SYMBIAN) || defined(__amigaos4__)
 #define _PRSelectFdSetArg_t fd_set *
 #else
 #error "Cannot determine architecture"
@@ -576,6 +593,14 @@ static void pt_poll_now(pt_Continuation *op)
     PRThread *self = PR_GetCurrentThread();
     
 	PR_ASSERT(PR_INTERVAL_NO_WAIT != op->timeout);
+
+#ifdef __amigaos4__
+	if (op->arg1.osfd < FD_SETSIZE)
+		pt_poll_now_with_select(op);
+
+	PR_ASSERT(op->arg1.osfd < FD_SETSIZE);
+	return;
+#else
 #if defined (_PR_POLL_WITH_SELECT)
 	/*
  	 * If the fd is small enough call the select-based poll operation
@@ -712,7 +737,7 @@ static void pt_poll_now(pt_Continuation *op)
 			} while (pt_continuation_done != op->status);
             break;
     }
-
+#endif
 }  /* pt_poll_now */
 
 static PRIntn pt_Continue(pt_Continuation *op)
@@ -3271,7 +3296,7 @@ static PRIOMethods _pr_socketpollfd_methods = {
     || defined(AIX) || defined(FREEBSD) || defined(NETBSD) \
     || defined(OPENBSD) || defined(BSDI) || defined(NTO) \
     || defined(DARWIN) || defined(UNIXWARE) || defined(RISCOS) \
-    || defined(SYMBIAN)
+    || defined(SYMBIAN) || defined(__amigaos4__)
 #define _PR_FCNTL_FLAGS O_NONBLOCK
 #else
 #error "Can't determine architecture"
@@ -3562,8 +3587,12 @@ PR_IMPLEMENT(PRFileDesc*) PR_OpenFile(
         if (NULL !=_pr_rename_lock)
             PR_Lock(_pr_rename_lock);
     }
-
+#ifdef __amigaos4__
+    osfd = open64(name, osflags, mode);
+#else
     osfd = _md_iovector._open64(name, osflags, mode);
+#endif
+
     syserrno = errno;
 
     if ((flags & PR_CREATE_FILE) && (NULL !=_pr_rename_lock))
@@ -4707,6 +4736,8 @@ PR_IMPLEMENT(PRInt32) PR_GetSysfdTableMax(void)
 {
 #if defined(AIX) || defined(SYMBIAN)
     return sysconf(_SC_OPEN_MAX);
+#elif defined(__amigaos4__)
+    return 20;
 #else
     struct rlimit rlim;
 
@@ -4719,7 +4750,7 @@ PR_IMPLEMENT(PRInt32) PR_GetSysfdTableMax(void)
 
 PR_IMPLEMENT(PRInt32) PR_SetSysfdTableSize(PRIntn table_size)
 {
-#if defined(AIX) || defined(SYMBIAN)
+#if defined(AIX) || defined(SYMBIAN) || defined(__amigaos4__)
     return -1;
 #else
     struct rlimit rlim;

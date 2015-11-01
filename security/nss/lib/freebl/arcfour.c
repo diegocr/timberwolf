@@ -38,6 +38,10 @@
 
 /* See NOTES ON UMRs, Unititialized Memory Reads, below. */
 
+#ifdef __amigaos4__
+#define WORD SYS_WORD
+#endif
+
 #ifdef FREEBL_NO_DEPEND
 #include "stubs.h"
 #endif
@@ -48,6 +52,9 @@
 #include "prtypes.h"
 #include "blapi.h"
 
+#ifdef __amigaos4__
+#undef WORD
+#endif
 /* Architecture-dependent defines */
 
 #if defined(SOLARIS) || defined(HPUX) || defined(i386) || defined(IRIX) || \

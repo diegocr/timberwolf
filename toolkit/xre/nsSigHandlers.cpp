@@ -454,6 +454,12 @@ void InstallSignalHandlers(const char *ProgramName)
 #elif defined(XP_OS2)
 /* OS/2's FPE handler is implemented in NSPR */
 
+#elif defined(XP_AMIGAOS)
+
+void InstallSignalHandlers(const char *ProgramName)
+{
+}
+
 #else
 #error No signal handling implementation for this platform.
 #endif

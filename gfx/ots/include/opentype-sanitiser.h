@@ -26,6 +26,10 @@ typedef unsigned __int64 uint64_t;
 #include <arpa/inet.h>
 #endif
 
+#ifdef __amigaos4__
+#include <netinet/in.h> // for htons etc
+#endif
+
 #include <algorithm>  // for std::min
 #include <cassert>
 #include <cstring>

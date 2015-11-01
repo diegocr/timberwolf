@@ -330,13 +330,14 @@ do not make any calls that eventually may end up in PR_Lock.  Because the
 thread is destroyed, can not access current thread any more.
 */
     _PR_CleanupTPD();
+#if !defined(__amigaos4__)
     if (_pr_terminationCVLock)
     /*
      * In light of the comment above, this looks real suspicious.
      * I'd go so far as to say it's just a problem waiting to happen.
      */
         PR_DestroyLock(_pr_terminationCVLock);
-
+#endif
     _PR_MD_CLEANUP_BEFORE_EXIT();
 }
 #endif /* defined(_PR_PTHREADS) */

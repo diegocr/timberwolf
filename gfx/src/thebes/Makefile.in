@@ -93,6 +93,10 @@ ifeq ($(MOZ_WIDGET_TOOLKIT),beos)
 CPPSRCS		+= nsSystemFontsBeOS.cpp
 endif
 
+ifeq ($(MOZ_WIDGET_TOOLKIT),amigaos)
+CPPSRCS		+= nsSystemFontsAmigaOS.cpp
+endif
+
 ifeq ($(MOZ_WIDGET_TOOLKIT),cocoa)
 CMMSRCS		= nsSystemFontsMac.mm
 endif

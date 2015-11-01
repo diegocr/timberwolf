@@ -1113,6 +1113,9 @@ nsXREDirProvider::GetUserDataDirectoryHome(nsILocalFile** aFile, PRBool aLocal)
 
   rv = NS_NewNativeLocalFile(nsDependentCString(homeDir), PR_TRUE,
                              getter_AddRefs(localDir));
+#elif defined(XP_AMIGAOS)
+  rv = NS_NewNativeLocalFile(nsDependentCString("CURRENTUSER:"), PR_TRUE,
+                             getter_AddRefs(localDir));
 #else
 #error "Don't know how to get product dir on your platform"
 #endif
@@ -1302,6 +1305,16 @@ nsXREDirProvider::AppendSysUserExtensionPath(nsIFile* aFile)
   rv = aFile->AppendNative(nsDependentCString(sExtensions));
   NS_ENSURE_SUCCESS(rv, rv);
 
+#elif defined(XP_AMIGAOS)
+
+  static const char* const sXR = ".mozilla";
+  rv = aFile->AppendNative(nsDependentCString(sXR));
+  NS_ENSURE_SUCCESS(rv, rv);
+
+  static const char* const sExtensions = "extensions";
+  rv = aFile->AppendNative(nsDependentCString(sExtensions));
+  NS_ENSURE_SUCCESS(rv, rv);
+  
 #else
 #error "Don't know how to get XRE user extension path on your platform"
 #endif
@@ -1351,6 +1364,44 @@ nsXREDirProvider::AppendProfilePath(nsIFile* aFile)
   rv = aFile->AppendNative(nsDependentCString("mozilla"));
   NS_ENSURE_SUCCESS(rv, rv);
 #elif defined(XP_UNIX)
+  // Make it hidden (i.e. using the ".")
+  nsCAutoString folder(".");
+
+  if (gAppData->profile) {
+    // Skip any leading path characters
+    const char* profileStart = gAppData->profile;
+    while (*profileStart == '/' || *profileStart == '\\')
+      profileStart++;
+
+    // On the off chance that someone wanted their folder to be hidden don't
+    // let it become ".."
+    if (*profileStart == '.')
+      profileStart++;
+
+    folder.Append(profileStart);
+    ToLowerCase(folder);
+
+    rv = AppendProfileString(aFile, folder.BeginReading());
+  }
+  else {
+    if (gAppData->vendor) {
+      folder.Append(gAppData->vendor);
+      ToLowerCase(folder);
+
+      rv = aFile->AppendNative(folder);
+      NS_ENSURE_SUCCESS(rv, rv);
+
+      folder.Truncate();
+    }
+
+    folder.Append(gAppData->name);
+    ToLowerCase(folder);
+
+    rv = aFile->AppendNative(folder);
+  }
+  NS_ENSURE_SUCCESS(rv, rv);
+
+#elif defined(XP_AMIGAOS)
   // Make it hidden (i.e. using the ".")
   nsCAutoString folder(".");
 

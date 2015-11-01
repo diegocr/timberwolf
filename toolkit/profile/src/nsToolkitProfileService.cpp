@@ -962,6 +962,14 @@ XRE_GetFileFromPath(const char *aPath, nsILocalFile* *aResult)
     return NS_NewNativeLocalFile(nsDependentCString(fullPath.Leaf()), PR_TRUE,
                                  aResult);
 
+#elif defined(XP_AMIGAOS)
+    char fullPath[MAXPATHLEN];
+
+    if (!realpath(aPath, fullPath))
+        return NS_ERROR_FAILURE;
+
+    return NS_NewNativeLocalFile(nsDependentCString(fullPath), PR_TRUE,
+                                 aResult);
 #else
 #error Platform-specific logic needed here.
 #endif

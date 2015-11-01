@@ -51,6 +51,9 @@ static size_t rng_systemFromNoise(unsigned char *dest, size_t maxLen);
 #ifdef XP_OS2
 #include "os2_rand.c"
 #endif
+#if defined(XP_AMIGAOS)
+#include "amigaos_rand.c"
+#endif
 
 /*
  * Normal RNG_SystemRNG() isn't available, use the system noise to collect

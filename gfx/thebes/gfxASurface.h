@@ -97,6 +97,7 @@ public:
         SurfaceTypeXML,
         SurfaceTypeSkia,
         SurfaceTypeD2D,
+        SurfaceTypeAmigaOS,
         SurfaceTypeMax
     } gfxSurfaceType;
 

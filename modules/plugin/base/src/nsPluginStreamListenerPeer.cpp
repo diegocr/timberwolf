@@ -750,9 +750,9 @@ nsPluginStreamListenerPeer::MakeByteRangeString(NPByteRange* aRangeList, nsACStr
       continue;
     
     // XXX needs to be fixed for negative offsets
-    string.AppendInt(range->offset);
+    string.AppendInt((PRInt32)range->offset);
     string.Append("-");
-    string.AppendInt(range->offset + range->length - 1);
+    string.AppendInt((PRInt32)(range->offset + range->length - 1));
     if (range->next)
       string += ",";
     

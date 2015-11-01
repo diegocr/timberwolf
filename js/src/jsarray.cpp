@@ -1765,7 +1765,7 @@ sort_compare_strings(void *arg, const void *a, const void *b, int *result)
     JSContext *cx = (JSContext *)arg;
     JSString *astr = ((const Value *)a)->toString();
     JSString *bstr = ((const Value *)b)->toString();
-    return JS_CHECK_OPERATION_LIMIT(cx) && CompareStrings(cx, astr, bstr, result);
+    return JS_CHECK_OPERATION_LIMIT(cx) && CompareStrings(cx, astr, bstr, (int32 *)result);
 }
 
 JSBool
@@ -3076,6 +3076,19 @@ NewDenseEmptyArray(JSContext *cx, JSObject *proto)
     return NewArray<false>(cx, 0, proto);
 }
 
+#ifdef XP_AMIGAOS
+JSObject * JS_FASTCALL
+NewDenseAllocatedArray(JSContext *cx, unsigned int length, JSObject *proto)
+{
+    return NewArray<true>(cx, length, proto);
+}
+
+JSObject * JS_FASTCALL
+NewDenseUnallocatedArray(JSContext *cx, unsigned int length, JSObject *proto)
+{
+    return NewArray<false>(cx, length, proto);
+}
+#else
 JSObject * JS_FASTCALL
 NewDenseAllocatedArray(JSContext *cx, uint32 length, JSObject *proto)
 {
@@ -3087,7 +3100,7 @@ NewDenseUnallocatedArray(JSContext *cx, uint32 length, JSObject *proto)
 {
     return NewArray<false>(cx, length, proto);
 }
-
+#endif
 JSObject *
 NewDenseCopiedArray(JSContext *cx, uintN length, Value *vp, JSObject *proto)
 {

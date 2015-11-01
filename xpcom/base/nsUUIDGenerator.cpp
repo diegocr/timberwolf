@@ -75,8 +75,20 @@ nsUUIDGenerator::Init()
 
     // We're a service, so we're guaranteed that Init() is not going
     // to be reentered while we're inside Init().
-    
-#if !defined(XP_WIN) && !defined(XP_MACOSX) && !defined(ANDROID)
+#if defined (XP_AMIGAOS)
+    mRBytes = 4;
+#ifdef RAND_MAX
+    if ((unsigned long) RAND_MAX < (unsigned long)0xffffffff)
+        mRBytes = 3;
+    if ((unsigned long) RAND_MAX < (unsigned long)0x00ffffff)
+        mRBytes = 2;
+    if ((unsigned long) RAND_MAX < (unsigned long)0x0000ffff)
+        mRBytes = 1;
+    if ((unsigned long) RAND_MAX < (unsigned long)0x000000ff)
+        return NS_ERROR_FAILURE;
+#endif
+#endif
+#if !defined(XP_WIN) && !defined(XP_MACOSX) && !defined(ANDROID) && !defined(XP_AMIGAOS)
     /* initialize random number generator using NSPR random noise */
     unsigned int seed;
 
@@ -166,6 +178,34 @@ nsUUIDGenerator::GenerateUUIDInPlace(nsID* id)
     memcpy(id, &bytes, sizeof(nsID));
 
     CFRelease(uuid);
+#elif defined(XP_AMIGAOS)
+    // Check what to do here
+	  PRSize bytesLeft = sizeof(nsID);
+      while (bytesLeft > 0) {
+          long rval = rand();
+
+          PRUint8 *src = (PRUint8*)&rval;
+          // We want to grab the mRBytes least significant bytes of rval, since
+          // mRBytes less than sizeof(rval) means the high bytes are 0.
+  #ifdef IS_BIG_ENDIAN
+          src += sizeof(rval) - mRBytes;
+  #endif
+          PRUint8 *dst = ((PRUint8*) id) + (sizeof(nsID) - bytesLeft);
+          PRSize toWrite = (bytesLeft < mRBytes ? bytesLeft : mRBytes);
+          for (PRSize i = 0; i < toWrite; i++)
+              dst[i] = src[i];
+
+          bytesLeft -= toWrite;
+      }
+
+      /* Put in the version */
+      id->m2 &= 0x0fff;
+      id->m2 |= 0x4000;
+
+      /* Put in the variant */
+      id->m3[0] &= 0x3f;
+      id->m3[0] |= 0x80;
+
 #else /* not windows or OS X; generate randomness using random(). */
     /* XXX we should be saving the return of setstate here and switching
      * back to it; instead, we use the value returned when we called

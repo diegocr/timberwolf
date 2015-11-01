@@ -81,6 +81,8 @@ CPPSRCS += nsRegisterGREVoid.cpp
 else
 ifeq (cocoa,$(MOZ_WIDGET_TOOLKIT))
 CPPSRCS += nsRegisterGREVoid.cpp
+ifneq (,$(filter AmigaOS,$(OS_ARCH)))
+CPPSRCS += nsRegisterGREAmigaOS.cpp
 else
 CPPSRCS += nsRegisterGREUnix.cpp
 endif

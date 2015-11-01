@@ -427,6 +427,14 @@ nsNoAuthURLParser::ParseAfterScheme(const char *spec, PRInt32 specLen,
                     break;  
                 } 
 #endif
+#if defined(XP_AMIGAOS)
+                // Check if the authority section is actually a volume name
+                // spec with volume name would be //Volume:path
+                // For now, we just assume that this is a volume name
+#warning "Fix this"
+                pos = 2;
+                break;
+#endif
                 p = (const char *) memchr(spec + 2, '/', specLen - 2);
             }
             if (p) {

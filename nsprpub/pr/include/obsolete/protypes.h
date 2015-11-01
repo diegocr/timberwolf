@@ -68,6 +68,14 @@ typedef PRIntn intn;
 #endif
 
 /*
+ * AmigaOS defines most of the int types below in its standard header
+ * file exec/types.h
+ */
+#ifdef __amigaos4__
+#include <exec/types.h>
+#endif
+
+/*
  * SVR4 typedef of uint is commonly found on UNIX machines.
  *
  * On AIX 4.3, sys/inttypes.h (which is included by sys/types.h)
@@ -96,7 +104,7 @@ typedef PRUintn uint;
  * uint64
  */
 
-#if !defined(XP_BEOS)
+#if !defined (XP_AMIGAOS) && !defined(XP_BEOS)
 typedef PRUint64 uint64;
 #endif
 
@@ -104,7 +112,7 @@ typedef PRUint64 uint64;
  * uint32
  */
 
-#if !defined(XP_BEOS)
+#if !defined (XP_AMIGAOS) && !defined(XP_BEOS)
 #if !defined(_WIN32) && !defined(XP_OS2) && !defined(NTO)
 typedef PRUint32 uint32;
 #else
@@ -116,7 +124,7 @@ typedef unsigned long uint32;
  * uint16
  */
 
-#if !defined(XP_BEOS)
+#if !defined (XP_AMIGAOS) &&!defined(XP_BEOS)
 typedef PRUint16 uint16;
 #endif
 
@@ -124,7 +132,7 @@ typedef PRUint16 uint16;
  * uint8
  */
 
-#if !defined(XP_BEOS)
+#if !defined (XP_AMIGAOS) && !defined(XP_BEOS)
 typedef PRUint8 uint8;
 #endif
 
@@ -132,7 +140,7 @@ typedef PRUint8 uint8;
  * int64
  */
 
-#if !defined(XP_BEOS) && !defined(_PR_AIX_HAVE_BSD_INT_TYPES)
+#if !defined (XP_AMIGAOS) && !defined(XP_BEOS) && !defined(_PR_AIX_HAVE_BSD_INT_TYPES)
 typedef PRInt64 int64;
 #endif
 
@@ -140,7 +148,7 @@ typedef PRInt64 int64;
  * int32
  */
 
-#if !defined(XP_BEOS) && !defined(_PR_AIX_HAVE_BSD_INT_TYPES) \
+#if !defined (XP_AMIGAOS) && !defined(XP_BEOS) && !defined(_PR_AIX_HAVE_BSD_INT_TYPES) \
     && !defined(HPUX)
 #if !defined(_WIN32) && !defined(XP_OS2) && !defined(NTO)
 typedef PRInt32 int32;
@@ -153,7 +161,7 @@ typedef long int32;
  * int16
  */
 
-#if !defined(XP_BEOS) && !defined(_PR_AIX_HAVE_BSD_INT_TYPES) \
+#if !defined (XP_AMIGAOS) && !defined(XP_BEOS) && !defined(_PR_AIX_HAVE_BSD_INT_TYPES) \
     && !defined(HPUX)
 typedef PRInt16 int16;
 #endif
@@ -162,12 +170,14 @@ typedef PRInt16 int16;
  * int8
  */
 
-#if !defined(XP_BEOS) && !defined(_PR_AIX_HAVE_BSD_INT_TYPES) \
+#if !defined (XP_AMIGAOS) && !defined(XP_BEOS) && !defined(_PR_AIX_HAVE_BSD_INT_TYPES) \
     && !defined(HPUX)
 typedef PRInt8 int8;
 #endif
 
+#if !defined (XP_AMIGAOS)
 typedef PRFloat64 float64;
+#endif
 typedef PRUptrdiff uptrdiff_t;
 typedef PRUword uprword_t;
 typedef PRWord prword_t;

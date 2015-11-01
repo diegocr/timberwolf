@@ -83,7 +83,7 @@ ClientThreadFunc(void *arg)
     /*
      * Make the fd invalid
      */
-#if defined(XP_UNIX)
+#if defined(XP_UNIX) || defined(XP_AMIGAOS)
     close(PR_FileDesc2NativeHandle(badFD));
 #elif defined(XP_OS2)
     soclose(PR_FileDesc2NativeHandle(badFD));
@@ -128,7 +128,7 @@ int main(int argc, char **argv)
 	PL_DestroyOptState(opt);
 
  /* main test */
-	
+
     PR_Init(PR_USER_THREAD, PR_PRIORITY_NORMAL, 0);
     PR_STDIO_INIT();
 
@@ -165,7 +165,7 @@ int main(int argc, char **argv)
 
     if ((listenSock2  = PR_NewTCPSocket()) == NULL) {
 	fprintf(stderr, "Can't create a new TCP socket\n");
-	failed_already=1;	
+	failed_already=1;
 	goto exit_now;
     }
     addr.inet.family = AF_INET;
@@ -173,18 +173,18 @@ int main(int argc, char **argv)
     addr.inet.port = PR_htons(0);
     if (PR_Bind(listenSock2, &addr) == PR_FAILURE) {
 	fprintf(stderr, "Can't bind socket\n");
-	failed_already=1;	
+	failed_already=1;
 	goto exit_now;
     }
     if (PR_GetSockName(listenSock2, &addr) == PR_FAILURE) {
 	fprintf(stderr, "PR_GetSockName failed\n");
-	failed_already=1;	
+	failed_already=1;
 	goto exit_now;
     }
     listenPort2 = PR_ntohs(addr.inet.port);
     if (PR_Listen(listenSock2, 5) == PR_FAILURE) {
 	fprintf(stderr, "Can't listen on a socket\n");
-	failed_already=1;	
+	failed_already=1;
 	goto exit_now;
     }
     PR_snprintf(buf, sizeof(buf),
@@ -226,14 +226,14 @@ int main(int argc, char **argv)
 	fprintf(stderr, "Failed to detect the bad fd: "
 		"PR_Poll returns %d, out_flags is 0x%hx\n",
 		retVal, pds[2].out_flags);
-	failed_already=1;	
+	failed_already=1;
 	goto exit_now;
     }
     if (debug_mode) printf("PR_Poll detected the bad fd.  Test passed.\n\n");
     PR_Cleanup();
 	goto exit_now;
 exit_now:
-	if(failed_already)	
+	if(failed_already)
 		return 1;
 	else
 		return 0;

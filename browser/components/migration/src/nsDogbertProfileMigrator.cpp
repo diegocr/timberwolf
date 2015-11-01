@@ -109,6 +109,17 @@
 #define HOME_ENVIRONMENT_VARIABLE         "HOME"
 #define PROFILE_HOME_ENVIRONMENT_VARIABLE "PROFILE_HOME"
 #define DEFAULT_UNIX_PROFILE_NAME         "default"
+#elif defined(XP_AMIGAOS)
+#define PREF_FILE_NAME_IN_4x      NS_LITERAL_STRING("preferences.js")
+#define COOKIES_FILE_NAME_IN_4x   NS_LITERAL_STRING("cookies")
+#define BOOKMARKS_FILE_NAME_IN_4x NS_LITERAL_STRING("bookmarks.html")
+#define PSM_CERT7_DB              NS_LITERAL_STRING("cert7.db")
+#define PSM_KEY3_DB               NS_LITERAL_STRING("key3.db")
+#define PSM_SECMODULE_DB          NS_LITERAL_STRING("secmodule.db")
+#define HOME_ENVIRONMENT_VARIABLE         "HOME"
+#define PROFILE_HOME_ENVIRONMENT_VARIABLE "PROFILE_HOME"
+#define DEFAULT_UNIX_PROFILE_NAME         "default"
+
 #else
 #error No netscape4.x profile-migrator on this platform.
 #endif /* XP_UNIX */

@@ -77,6 +77,9 @@
 #include <image.h>
 #include "prenv.h"
 #endif
+#if defined(XP_AMIGAOS)
+#include <proto/dos.h>
+#endif
 
 #include "SpecialSystemDirectory.h"
 #include "nsAppFileLocationProvider.h"
@@ -87,6 +90,8 @@
 // For Windows platform, We are choosing Appdata folder as HOME
 #if defined (XP_WIN)
 #define HOME_DIR NS_WIN_APPDATA_DIR
+#elif defined (XP_AMIGAOS)
+#define HOME_DIR NS_AMIGAOS_HOME_DIR
 #elif defined (XP_MACOSX)
 #define HOME_DIR NS_OSX_HOME_DIR
 #elif defined (XP_UNIX)
@@ -183,7 +188,19 @@ nsDirectoryService::GetCurrentProcessDirectory(nsILocalFile** aFile)
     NS_ASSERTION(*aFile, "nsDirectoryService - Could not determine CurrentProcessDir.\n");
     if (*aFile)
         return NS_OK;
-
+        
+#elif defined(XP_AMIGAOS)
+    char buf[1100];
+	BPTR lock = IDOS->GetProgramDir();
+	if (lock)
+	{
+		if ((IDOS->NameFromLock(lock, buf, 1099)))
+		{
+	        localFile->InitWithNativePath(nsDependentCString(buf));
+	        *aFile = localFile;
+	        return NS_OK;
+		}
+	}
 #elif defined(XP_UNIX)
 
     // In the absence of a good way to get the executable directory let
@@ -901,6 +918,15 @@ nsDirectoryService::GetFile(const char *prop, PRBool *persistent, nsIFile **_ret
     else if (inAtom == nsDirectoryService::sDefaultDownloadDirectory)
     {
         rv = GetSpecialSystemDirectory(Win_Downloads, getter_AddRefs(localFile));
+    }
+#elif defined (XP_AMIGAOS)
+    else if (inAtom == nsDirectoryService::sOS_HomeDirectory)
+    {
+        rv = GetSpecialSystemDirectory(AmigaOS_HomeDirectory, getter_AddRefs(localFile));
+    }
+    else if (inAtom == nsDirectoryService::sOS_DesktopDirectory)
+    {
+        rv = GetSpecialSystemDirectory(AmigaOS_DesktopDirectory, getter_AddRefs(localFile));
     }
 #elif defined (XP_UNIX)
 

@@ -276,7 +276,7 @@ static const char *dllname =
 	"libnssckbi.sl";
 #elif defined(DARWIN)
 	"libnssckbi.dylib";
-#elif defined(XP_UNIX) || defined(XP_BEOS)
+#elif defined(XP_UNIX) || defined(XP_BEOS) || defined(XP_AMIGAOS)
 	"libnssckbi.so";
 #else
 	#error "Uh! Oh! I don't know about this platform."

@@ -71,6 +71,12 @@ static RedirEntry kRedirMap[] = {
       nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT },
     { "mozilla", "chrome://global/content/mozilla.xhtml",
       nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT },
+#ifdef XP_AMIGAOS
+    { "timberwolf", "chrome://global/content/timberwolf.xhtml",
+    	 nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT },
+    { "boing", "chrome://global/content/boing.html",
+  	    	 nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT },
+#endif
     { "plugins", "chrome://global/content/plugins.html", 0 },
     { "config", "chrome://global/content/config.xul", 0 },
 #ifdef MOZ_CRASHREPORTER

@@ -201,11 +201,12 @@ PRInt64 nsBuiltinDecoderStateMachine::GetDecodedAudioDuration() {
   }
   return audioDecoded;
 }
+// DEBUG
 
 void nsBuiltinDecoderStateMachine::DecodeLoop()
 {
   NS_ASSERTION(OnDecodeThread(), "Should be on decode thread.");
-
+//printf("--------*> 1\n");
   // We want to "pump" the decode until we've got a few frames/samples decoded
   // before we consider whether decode is falling behind.
   PRBool audioPump = PR_TRUE;
@@ -247,7 +248,7 @@ void nsBuiltinDecoderStateMachine::DecodeLoop()
   while (mState != DECODER_STATE_SHUTDOWN &&
          !mStopDecodeThreads &&
          (videoPlaying || audioPlaying))
-  {
+  {//printf("--------*> 1\n");
     // We don't want to consider skipping to the next keyframe if we've
     // only just started up the decode loop, so wait until we've decoded
     // some frames before enabling the keyframe skip logic on video.
@@ -256,14 +257,14 @@ void nsBuiltinDecoderStateMachine::DecodeLoop()
     {
       videoPump = PR_FALSE;
     }
-
+//printf("--------*> 2\n");
     // We don't want to consider skipping to the next keyframe if we've
     // only just started up the decode loop, so wait until we've decoded
     // some audio data before enabling the keyframe skip logic on audio.
     if (audioPump && GetDecodedAudioDuration() >= audioPumpThresholdMs) {
       audioPump = PR_FALSE;
     }
-
+//printf("--------*> 3\n");
     // We'll skip the video decode to the nearest keyframe if we're low on
     // audio, or if we're low on video, provided we're not running low on
     // data to decode. If we're running low on downloaded data to decode,
@@ -281,7 +282,7 @@ void nsBuiltinDecoderStateMachine::DecodeLoop()
       skipToNextKeyframe = PR_TRUE;
       LOG(PR_LOG_DEBUG, ("Skipping video decode to the next keyframe"));
     }
-
+//printf("--------*> 4\n");
     // Video decode.
     if (videoPlaying &&
         static_cast<PRUint32>(videoQueue.GetSize()) < AMPLE_VIDEO_FRAMES)
@@ -310,7 +311,7 @@ void nsBuiltinDecoderStateMachine::DecodeLoop()
              lowAudioThreshold, ampleAudioThreshold));
       }
     }
-
+//printf("--------*> 5\n");
     // Audio decode.
     if (audioPlaying &&
         (GetDecodedAudioDuration() < ampleAudioThreshold || audioQueue.GetSize() == 0))
@@ -318,18 +319,18 @@ void nsBuiltinDecoderStateMachine::DecodeLoop()
       MonitorAutoExit exitMon(mDecoder->GetMonitor());
       audioPlaying = mReader->DecodeAudioData();
     }
-    
+//printf("--------*> 6\n");
     // Notify to ensure that the AudioLoop() is not waiting, in case it was
     // waiting for more audio to be decoded.
     mDecoder->GetMonitor().NotifyAll();
-
-    if (!IsPlaying()) {
+//printf("--------*> 7\n");
+    if (!IsPlaying()) {//printf("--------*> 8\n");
       // Update the ready state, so that the play DOM events fire. We only
       // need to do this if we're not playing; if we're playing the playback
       // code will do an update whenever it advances a frame.
       UpdateReadyState();
     }
-
+//printf("--------*> 9.0\n");
     if (mState != DECODER_STATE_SHUTDOWN &&
         !mStopDecodeThreads &&
         (!audioPlaying || (GetDecodedAudioDuration() >= ampleAudioThreshold &&
@@ -347,9 +348,11 @@ void nsBuiltinDecoderStateMachine::DecodeLoop()
       // monitor which will wake us up shortly after we sleep, thus preventing
       // both the decode and audio push threads waiting at the same time.
       // See bug 620326.
+//printf("--------*> 9.1\n");
       mon.Wait();
+//printf("--------*> 9.2\n");
     }
-
+//printf("--------*> 9.3\n");
   } // End decode loop.
 
   if (!mStopDecodeThreads &&
@@ -359,7 +362,7 @@ void nsBuiltinDecoderStateMachine::DecodeLoop()
     mState = DECODER_STATE_COMPLETED;
     mDecoder->GetMonitor().NotifyAll();
   }
-
+//printf("--------*> 10\n");
   LOG(PR_LOG_DEBUG, ("Shutting down DecodeLoop this=%p", this));
 }
 
@@ -390,13 +393,15 @@ void nsBuiltinDecoderStateMachine::AudioLoop()
     NS_ASSERTION(audioStartTime != -1, "Should have audio start time by now");
   }
   while (1) {
-
+//printf("Audio loop\n");
     // Wait while we're not playing, and we're not shutting down, or we're
     // playing and we've got no audio to play.
     {
       MonitorAutoEnter mon(mDecoder->GetMonitor());
       NS_ASSERTION(mState != DECODER_STATE_DECODING_METADATA,
                    "Should have meta data before audio started playing.");
+//printf("---> 0   mState = %d  mStopDecodeThreads == %d IsPlaying() = %d  mReader->mAudioQueue.GetSize = %d mReader->mAudioQueue.AtEndOfStream() = %d\n",
+//		mState, mStopDecodeThreads, IsPlaying(), mReader->mAudioQueue.GetSize(), mReader->mAudioQueue.AtEndOfStream());
       while (mState != DECODER_STATE_SHUTDOWN &&
              !mStopDecodeThreads &&
              (!IsPlaying() ||
@@ -404,6 +409,8 @@ void nsBuiltinDecoderStateMachine::AudioLoop()
               (mReader->mAudioQueue.GetSize() == 0 &&
                !mReader->mAudioQueue.AtEndOfStream())))
       {
+//printf("---> 1   mState = %d  mStopDecodeThreads == %d IsPlaying() = %d  mReader->mAudioQueue.GetSize = %d mReader->mAudioQueue.AtEndOfStream() = %d\n",
+//		mState, mStopDecodeThreads, IsPlaying(), mReader->mAudioQueue.GetSize(), mReader->mAudioQueue.AtEndOfStream());
         samplesAtLastSleep = audioDuration;
         mon.Wait();
       }
@@ -413,6 +420,7 @@ void nsBuiltinDecoderStateMachine::AudioLoop()
           mStopDecodeThreads ||
           mReader->mAudioQueue.AtEndOfStream())
       {
+//printf("End of stream\n");
         break;
       }
 
@@ -423,7 +431,7 @@ void nsBuiltinDecoderStateMachine::AudioLoop()
       setVolume = volume != mVolume;
       volume = mVolume;
     }
-
+//printf("---> 2\n");
     if (setVolume || minWriteSamples == -1) {
       MonitorAutoEnter audioMon(mAudioMonitor);
       if (mAudioStream) {
@@ -440,7 +448,7 @@ void nsBuiltinDecoderStateMachine::AudioLoop()
     // See if there's missing samples in the audio stream. If there is, push
     // silence into the audio hardware, so we can play across the gap.
     const SoundData* s = mReader->mAudioQueue.PeekFront();
-
+//printf("---> 3\n");
     // Calculate the number of samples that have been pushed onto the audio
     // hardware.
     PRInt64 playedSamples = 0;
@@ -452,7 +460,7 @@ void nsBuiltinDecoderStateMachine::AudioLoop()
       NS_WARNING("Int overflow adding playedSamples");
       break;
     }
-
+//printf("---> 4\n");
     // Calculate the timestamp of the next chunk of audio in numbers of
     // samples.
     PRInt64 sampleTime = 0;
@@ -465,7 +473,7 @@ void nsBuiltinDecoderStateMachine::AudioLoop()
       NS_WARNING("Int overflow adding missingSamples");
       break;
     }
-
+//printf("sampleTime = %lld    missingSamples = %lld\n", sampleTime, missingSamples);
     if (missingSamples > 0) {
       // The next sound chunk begins some time after the end of the last chunk
       // we pushed to the sound hardware. We must push silence into the audio
@@ -477,18 +485,19 @@ void nsBuiltinDecoderStateMachine::AudioLoop()
     } else {
       audioDuration += PlayFromAudioQueue(sampleTime, channels);
     }
+//printf("---> 5\n");
     {
       MonitorAutoEnter mon(mDecoder->GetMonitor());
       PRInt64 playedMs;
       if (!SamplesToMs(audioDuration, rate, playedMs)) {
-        NS_WARNING("Int overflow calculating playedMs");
+        NS_WARNING("Int overflow calculating playedMs"); //printf("Overflow playedMS\n");
         break;
       }
       if (!AddOverflow(audioStartTime, playedMs, mAudioEndTime)) {
-        NS_WARNING("Int overflow calculating audio end time");
+        NS_WARNING("Int overflow calculating audio end time"); //printf("Overflow end time\n");
         break;
       }
-
+//printf("playedMs = %lld    mAudioEndTime = %lld\n", playedMs, mAudioEndTime);
       PRInt64 audioAhead = mAudioEndTime - GetMediaTime();
       if (audioAhead > AMPLE_AUDIO_MS &&
           audioDuration - samplesAtLastSleep > minWriteSamples)
@@ -498,7 +507,9 @@ void nsBuiltinDecoderStateMachine::AudioLoop()
         // significant amount ahead of the playback position. The decode
         // thread will be going to sleep, so we won't get any new samples
         // anyway, so sleep until we need to push to the hardware again.
+        //printf("Waiting\n");
         Wait(AMPLE_AUDIO_MS / 2);
+        //printf("Notifying\n");
         // Kick the decode thread; since above we only do a NotifyAll when
         // we pop an audio chunk of the queue, the decoder won't wake up if
         // we've got no more decoded chunks to push to the hardware. We can
@@ -506,9 +517,12 @@ void nsBuiltinDecoderStateMachine::AudioLoop()
         // it's EOS flag set, and the decode thread sleeps just after decoding
         // that packet, but before realising there's no more packets.
         mon.NotifyAll();
+        //printf("Done\n");
       }
     }
+//printf("---> 6\n");
   }
+//printf("Out of audio loop\n");
   if (mReader->mAudioQueue.AtEndOfStream() &&
       mState != DECODER_STATE_SHUTDOWN &&
       !mStopDecodeThreads)
@@ -557,6 +571,8 @@ void nsBuiltinDecoderStateMachine::AudioLoop()
     mDecoder->GetMonitor().NotifyAll();
   }
   LOG(PR_LOG_DEBUG, ("Audio stream finished playing, audio thread exit"));
+
+  //printf("Audio stream finished\n");
 }
 
 PRUint32 nsBuiltinDecoderStateMachine::PlaySilence(PRUint32 aSamples,
@@ -629,6 +645,7 @@ PRUint32 nsBuiltinDecoderStateMachine::PlayFromAudioQueue(PRUint64 aSampleOffset
   }
   return samples;
 }
+
 
 nsresult nsBuiltinDecoderStateMachine::Init(nsDecoderStateMachine* aCloneDonor)
 {
@@ -1076,7 +1093,6 @@ nsresult nsBuiltinDecoderStateMachine::Run()
             NS_NewRunnableMethod(mDecoder, &nsBuiltinDecoder::SeekingStarted);
           NS_DispatchToMainThread(startEvent, NS_DISPATCH_SYNC);
         }
-
         if (currentTimeChanged) {
           // The seek target is different than the current playback position,
           // we'll need to seek the playback position, so shutdown our decode
@@ -1213,7 +1229,7 @@ nsresult nsBuiltinDecoderStateMachine::Run()
         break;
       }
 
-    case DECODER_STATE_COMPLETED:
+    case DECODER_STATE_COMPLETED:;
       {
         if (NS_FAILED(StartDecodeThreads())) {
           continue;
@@ -1383,8 +1399,10 @@ void nsBuiltinDecoderStateMachine::AdvanceFrame()
     // advance the clock to after the media end time.
     if (mVideoFrameEndTime != -1 || mAudioEndTime != -1) {
       // These will be non -1 if we've displayed a video frame, or played an audio sample.
+////printf("clock_time %lld  mVideoFrameTime %lld  mAudioEndTime %lld\n", clock_time, mVideoFrameEndTime, mAudioEndTime);
       clock_time = NS_MIN(clock_time, NS_MAX(mVideoFrameEndTime, mAudioEndTime));
-      if (clock_time > GetMediaTime()) {
+
+      if (clock_time > GetMediaTime()) {//printf("UpdatePlaybackPosition\n");
         // Only update the playback position if the clock time is greater
         // than the previous playback position. The audio clock can
         // sometimes report a time less than its previously reported in

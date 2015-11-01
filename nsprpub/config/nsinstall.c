@@ -98,7 +98,7 @@ my_getcwd (char *buf, size_t size)
 }
 #endif /* NEXTSTEP */
 
-#if defined(LINUX) || defined(__GNU__) || defined(__GLIBC__) 
+#if defined(LINUX) || defined(__GNU__) || defined(__GLIBC__)
 #include <getopt.h>
 #endif
 
@@ -132,7 +132,7 @@ mkdirs(char *path, mode_t mode)
     char *cp;
     struct stat sb;
     int res;
-    
+
     while (*path == '/' && path[1] == '/')
 	path++;
     for (cp = strrchr(path, '/'); cp && cp != path && cp[-1] == '/'; cp--)

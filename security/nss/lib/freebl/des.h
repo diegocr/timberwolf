@@ -42,9 +42,18 @@
 #ifndef _DES_H_
 #define _DES_H_ 1
 
+#if defined(__amigaos4__)
+#include <stdio.h>
+#include <unistd.h>
+#endif
+
 #include "blapi.h"
 
+#ifndef __amigaos4__
 typedef unsigned char BYTE;
+#else
+#define BYTE unsigned char
+#endif
 typedef unsigned int  HALF;
 
 #define HALFPTR(x) ((HALF *)(x))

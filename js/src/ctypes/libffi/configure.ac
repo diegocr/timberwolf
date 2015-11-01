@@ -146,6 +146,10 @@ case "$host" in
   powerpc*-*-rtems*)
 	TARGET=POWERPC; TARGETDIR=powerpc
 	;;
+	
+  powerpc-*-amigaos*)
+  	TARGET=POWERPC; TARGETDIR=powerpc
+  	;;
 
   s390-*-* | s390x-*-*)
 	TARGET=S390; TARGETDIR=s390

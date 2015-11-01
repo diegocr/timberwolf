@@ -42,7 +42,15 @@
 #include <unistd.h>
 
 #else
+#ifdef __amigaos4__
+#define BOOL SYSBOOL
+#include <proto/exec.h>
+#include <exec/exectags.h>
+#include <exec/semaphores.h>
+#undef BOOL
+#else
 #include <semaphore.h>
+#endif
 #endif
 
 #include <pthread.h>
@@ -75,8 +83,17 @@
 #define thread_sleep(nms) /* { struct timespec ts;ts.tv_sec=0; ts.tv_nsec = 1000*nms;nanosleep(&ts, NULL);} */
 #else
 #include <unistd.h>
+#ifdef __amigaos4__
+#define thread_sleep(nms)
+#define sem_t struct SignalSemaphore *
+#define sem_init(X,Y,Z) ((*X = IExec->AllocSysObject(ASOT_SEMAPHORE, TAG_DONE)) != NULL)
+#define sem_wait(sem) ({IExec->ObtainSemaphore(sem); 0;})
+#define sem_post(sem) ({IExec->ReleaseSemaphore(sem); 0;})
+#define sem_destroy(sem) ({IExec->FreeSysObject(ASOT_SEMAPHORE, sem); 0;})
+#else
 #include <sched.h>
 #define thread_sleep(nms) sched_yield();/* {struct timespec ts;ts.tv_sec=0; ts.tv_nsec = 1000*nms;nanosleep(&ts, NULL);} */
+#endif
 #endif
 /* Not Windows. Assume pthreads */
 

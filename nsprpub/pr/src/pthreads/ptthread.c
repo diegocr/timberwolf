@@ -1144,7 +1144,7 @@ static void null_signal_handler(PRIntn sig);
  */
 static void init_pthread_gc_support(void)
 {
-#ifndef SYMBIAN
+#if !defined(SYMBIAN) && !defined(__amigaos4__)
     PRIntn rv;
 
 #if defined(_PR_DCETHREADS)
@@ -1378,7 +1378,7 @@ static void pt_SuspendSet(PRThread *thred)
     PR_LOG(_pr_gc_lm, PR_LOG_ALWAYS, 
 	   ("doing pthread_kill in pt_SuspendSet thred %p tid = %X\n",
 	   thred, thred->id));
-#if defined(SYMBIAN)
+#if defined(SYMBIAN) || defined(__amigaos4__)
     /* All signal group functions are not implemented in Symbian OS */
     rv = 0;
 #else
@@ -1435,7 +1435,7 @@ static void pt_ResumeSet(PRThread *thred)
     thred->suspend &= ~PT_THREAD_SUSPENDED;
 
 #if defined(PT_NO_SIGTIMEDWAIT)
-#if defined(SYMBIAN) 
+#if defined(SYMBIAN) || defined(__amigaos4__)
 	/* All signal group functions are not implemented in Symbian OS */
 #else
 	pthread_kill(thred->id, SIGUSR1);

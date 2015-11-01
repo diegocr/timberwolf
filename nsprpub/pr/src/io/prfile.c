@@ -423,6 +423,8 @@ PR_IMPLEMENT(PRInt32) PR_GetSysfdTableMax(void)
 #elif defined(XP_BEOS)
     PR_SetError(PR_NOT_IMPLEMENTED_ERROR, 0);
    return -1;
+#elif defined (XP_AMIGAOS)
+    return FOPEN_MAX;
 #else
     write me;
 #endif
@@ -467,6 +469,9 @@ PR_IMPLEMENT(PRInt32) PR_SetSysfdTableSize(int table_size)
     return tableMax;
 #elif defined(AIX) || defined(NEXTSTEP) || defined(QNX) \
         || defined(WIN32) || defined(WIN16) || defined(XP_BEOS)
+    PR_SetError(PR_NOT_IMPLEMENTED_ERROR, 0);
+    return -1;
+#elif defined(XP_AMIGAOS)
     PR_SetError(PR_NOT_IMPLEMENTED_ERROR, 0);
     return -1;
 #else

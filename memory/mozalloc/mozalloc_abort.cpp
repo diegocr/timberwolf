@@ -47,6 +47,8 @@
 #  include <windows.h>          // for DebugBreak
 #elif defined(XP_UNIX)
 #  include <unistd.h>           // for _exit
+#elif defined(XP_AMIGAOS)
+#  include <unistd.h>
 #endif
 
 #if defined(XP_WIN) || defined(XP_OS2)

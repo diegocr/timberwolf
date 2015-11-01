@@ -245,7 +245,7 @@ COMPONENT_LIBS += \
 	$(NULL)
 endif
 
-ifeq (,$(filter android qt beos os2 cocoa windows,$(MOZ_WIDGET_TOOLKIT)))
+ifeq (,$(filter android qt beos os2 cocoa windows amigaos,$(MOZ_WIDGET_TOOLKIT)))
 ifdef MOZ_XUL
 COMPONENT_LIBS += fileview
 DEFINES += -DMOZ_FILEVIEW
@@ -324,6 +324,9 @@ COMPONENT_LIBS += widget_mac
 endif
 ifeq (qt,$(MOZ_WIDGET_TOOLKIT))
 COMPONENT_LIBS += widget_qt
+endif
+ifeq (amigaos,$(MOZ_WIDGET_TOOLKIT))
+COMPONENT_LIBS += widget_amigaos
 endif
 
 ifdef ACCESSIBILITY

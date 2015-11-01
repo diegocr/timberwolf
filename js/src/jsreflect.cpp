@@ -3184,8 +3184,13 @@ Class js_ReflectClass = {
     ConvertStub
 };
 
+#if defined(XP_AMIGAOS)
+static JSBool
+reflect_parse(JSContext *cx, uintN argc, jsval *vp)
+#else
 static JSBool
 reflect_parse(JSContext *cx, uint32 argc, jsval *vp)
+#endif
 {
     if (argc < 1) {
         JS_ReportErrorNumber(cx, js_GetErrorMessage, NULL, JSMSG_MORE_ARGS_NEEDED,

@@ -37,6 +37,9 @@
 #if defined(MOZ_WIDGET_GTK2)
 #include "gfxPlatformGtk.h"
 #define gfxToolkitPlatform gfxPlatformGtk
+#elif defined(XP_AMIGAOS)
+#include "gfxAmigaOSPlatform.h"
+#define gfxToolkitPlatform gfxAmigaOSPlatform
 #elif defined(MOZ_WIDGET_QT)
 #include <qfontinfo.h>
 #include "gfxQtPlatform.h"
@@ -383,6 +386,15 @@ gfxFT2FontGroup::gfxFT2FontGroup(const nsAString& families,
         LOGFONTW logFont;
         if (hGDI && ::GetObjectW(hGDI, sizeof(logFont), &logFont))
             familyArray.AppendElement(nsDependentString(logFont.lfFaceName));
+#elif defined(XP_AMIGAOS)
+        FcResult result;
+        FcChar8 *family = nsnull;
+        FcPattern* pat = FcPatternCreate();
+        FcPattern *match = FcFontMatch(nsnull, pat, &result);
+        if (match)
+            FcPatternGetString(match, FC_FAMILY, 0, &family);
+        if (family)
+            familyArray.AppendElement(NS_ConvertUTF8toUTF16((char*)family));
 #elif defined(ANDROID)
         familyArray.AppendElement(NS_LITERAL_STRING("Droid Sans"));
 #else

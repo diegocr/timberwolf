@@ -290,6 +290,9 @@ void LogTerm();
 #elif defined(XP_UNIX) || defined(XP_BEOS)
   #define XPCOM_FILE_PATH_SEPARATOR       "/"
   #define XPCOM_ENV_PATH_SEPARATOR        ":"
+#elif defined(XP_AMIGAOS)
+  #define XPCOM_FILE_PATH_SEPARATOR        "/"
+  #define XPCOM_ENV_PATH_SEPARATOR 		   ";"
 #else
   #error need_to_define_your_file_path_separator_and_illegal_characters
 #endif

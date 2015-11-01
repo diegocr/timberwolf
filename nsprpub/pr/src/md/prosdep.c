@@ -46,9 +46,14 @@
 #endif
 #ifdef _WIN32
 #include <windows.h>
-#endif 
+#endif
 #ifdef XP_BEOS
 #include <OS.h>
+#endif
+#ifdef XP_AMIGAOS
+#include <exec/types.h>
+#include <exec/exectags.h>
+#include <proto/exec.h>
 #endif
 
 PRInt32 _pr_pageShift;
@@ -89,6 +94,26 @@ static void GetPageSize(void)
     _pr_pageSize = 4096;
 #endif
 #endif /* XP_PC */
+#ifdef XP_AMIGAOS
+	uint32 pmask;
+	IExec->GetCPUInfoTags(
+		GCIT_CPUPageSize, &pmask,
+	TAG_DONE);
+	if (pmask & 0x1000) _pr_pageSize = 4096;
+	else
+	{
+		int i;
+		int mask = 1;
+		for (i=0; i<32; i++)
+		{
+			if (pmask & mask)
+			{
+				_pr_pageSize = pmask & mask;
+				break;
+			}
+		}
+	}
+#endif
 
 	pageSize = _pr_pageSize;
 	PR_CEILING_LOG2(_pr_pageShift, pageSize);

@@ -62,7 +62,7 @@
 #include "prthread.h"
 #endif /* THREADMARK */
 
-#if defined(XP_UNIX) || defined(XP_OS2) || defined(XP_BEOS)
+#if defined(XP_UNIX) || defined(XP_OS2) || defined(XP_BEOS) || defined(XP_AMIGAOS)
 #include <stdlib.h>
 #else
 #include "wtypes.h"
@@ -77,6 +77,10 @@ typedef struct threadmark_mark_str {
 } threadmark_mark;
 
 #endif /* THREADMARK */
+
+#if defined(XP_AMIGAOS)
+extern int putenv(char *);
+#endif
 
 /* The value of this magic must change each time PORTArenaPool changes. */
 #define ARENAPOOL_MAGIC 0xB8AC9BDF 

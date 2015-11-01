@@ -154,6 +154,9 @@
     #define NS_WIN_PRINTHOOD                    "PrntHd"
     #define NS_WIN_COOKIES_DIR                  "CookD"
     #define NS_WIN_DEFAULT_DOWNLOAD_DIR         "DfltDwnld"
+#elif defined (XP_AMIGAOS)
+	#define NS_AMIGAOS_HOME_DIR					NS_OS_HOME_DIR
+	#define NS_AMIGAOS_DESKTOP_DIR				NS_OS_DESKTOP_DIR
 #elif defined (XP_UNIX)
     #define NS_UNIX_LOCAL_DIR                   "Locl"
     #define NS_UNIX_LIB_DIR                     "LibD"

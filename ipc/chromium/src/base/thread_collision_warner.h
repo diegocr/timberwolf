@@ -5,7 +5,11 @@
 #ifndef BASE_THREAD_COLLISION_WARNER_H_
 #define BASE_THREAD_COLLISION_WARNER_H_
 
+#ifdef __amigaos4__
+#include <stdlib.h>
+#else
 #include <memory.h>
+#endif
 
 #include "base/atomicops.h"
 

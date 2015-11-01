@@ -729,7 +729,7 @@ TokenStream::getXMLEntity()
  * advance along the buffer.
  */
 bool
-TokenStream::peekUnicodeEscape(int *result)
+TokenStream::peekUnicodeEscape(int32 *result)
 {
     jschar cp[5];
 
@@ -999,7 +999,7 @@ TokenStream::getTokenInternal()
 
     hadUnicodeEscape = false;
     if (JS_ISIDSTART(c) ||
-        (c == '\\' && (hadUnicodeEscape = matchUnicodeEscapeIdStart(&qc))))
+        (c == '\\' && (hadUnicodeEscape = matchUnicodeEscapeIdStart((int32 *)&qc))))
     {
         if (hadUnicodeEscape)
             c = qc;
@@ -1009,7 +1009,7 @@ TokenStream::getTokenInternal()
                 goto error;
             c = getChar();
             if (c == '\\') {
-                if (!matchUnicodeEscapeIdent(&qc))
+                if (!matchUnicodeEscapeIdent((int32 *)&qc))
                     break;
                 c = qc;
                 hadUnicodeEscape = true;

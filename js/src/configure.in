@@ -276,7 +276,6 @@ if test "$target" = "arm-android-eabi" ; then
     if test -z "$android_platform" ; then
        android_platform="$android_ndk"/build/platforms/android-"$android_version"/arch-"$target_cpu"
     fi
-
     dnl set up compilers
     AS="$android_toolchain"/bin/arm-eabi-as
     CC="$android_toolchain"/bin/arm-eabi-gcc
@@ -1232,6 +1231,7 @@ if test -n "$CROSS_COMPILE"; then
         wince*)       OS_ARCH=WINCE ;;
         winmo*)       OS_ARCH=WINCE ;;
         darwin*)      OS_ARCH=Darwin OS_TARGET=Darwin ;;
+        amigaos*)	  OS_ARCH=AmigaOS ;;         
     esac
     case "${target}" in
         arm-android-eabi) OS_ARCH=Linux OS_TARGET=Android ;;
@@ -1828,6 +1828,13 @@ dnl ========================================================
 dnl System overrides of the defaults for host
 dnl ========================================================
 case "$host" in
+*-amigaos*)
+	HOST_CFLAGS="$HOST_CFLAGS -DXP_AMIGAOS -D_POSIX_SOURCE -DNO_X11"
+	HOST_NSPR_MDCPUCFG='\"md/_amigaos.cfg\"'
+	HOST_OPTIMIZE_FLAGS="${HOST_OPTIMIZE_FLAGS=-O3}"
+	HOST_LDFLAGS="$HOST_LDFLAGS -use-dynld"
+	;;
+	
 *-beos*)
     HOST_CFLAGS="$HOST_CFLAGS -DXP_BEOS -DBeOS -DBEOS -D_POSIX_SOURCE -DNO_X11"
     HOST_NSPR_MDCPUCFG='\"md/_beos.cfg\"'
@@ -1983,6 +1990,16 @@ case "$target" in
     AC_DEFINE(NSCAP_DISABLE_DEBUG_PTR_TYPES)
     ;;
 
+*-amigaos*)
+	no_x=yes
+	_PLATFROM_DEFAULT_TOOLKIT="cairo-amigaos"
+	DSO_LDOPTS="-shared"
+	MOZ_USER_DUR="Mozilla"
+	LDFLAGS="$LDFLAGS -use-dynld"
+	TARGET_NSPR_MDCPUCFG='\"md/_amigaos.cfg\"'
+	AC_DEFINE(HAVE_VA_LIST_AS_ARRAY)	
+	;;
+	
 *-beos*)
     no_x=yes
     MKSHLIB='$(CXX) $(CXXFLAGS) $(DSO_LDOPTS) -Wl,-h,$@ -o $@'
@@ -3752,6 +3769,7 @@ dnl Checks for library functions.
 dnl ========================================================
 AC_PROG_GCC_TRADITIONAL
 AC_FUNC_MEMCMP
+
 AC_CHECK_FUNCS([fchmod flockfile getc_unlocked _getc_nolock getpagesize \
                 lchown localtime_r lstat64 memmove random rint sbrk snprintf \
                 stat64 statvfs statvfs64 strerror strtok_r truncate64])
@@ -4767,6 +4785,7 @@ MOZ_ARG_WITH_STRING(debug-label,
     MOZ_DEBUG_ENABLE_DEFS="$MOZ_DEBUG_ENABLE_DEFS -DDEBUG_${option}"
 done])
 
+
 MOZ_DEBUG_DISABLE_DEFS="-DNDEBUG -DTRIMMED"
 
 if test -n "$MOZ_DEBUG"; then
@@ -5609,6 +5628,10 @@ case "$target" in
     NO_EDITLINE=1
     JS_DISABLE_SHELL=1
     ;;
+*-amigaos*)
+	NO_EDITLINE=1
+	JS_DISABLE_SHELL=1
+	;;
 *)
     ;;
 esac
@@ -5897,6 +5920,8 @@ dnl ========================================================
 
 if test "$OS_ARCH" = "BeOS"; then
   AC_DEFINE(XP_BEOS)
+elif test "$OS_ARCH" = "AmigaOS"; then
+  AC_DEFINE(XP_AMIGAOS) 
 elif test "$OS_ARCH" = "Darwin"; then
   AC_DEFINE(XP_MACOSX)
   AC_DEFINE(XP_UNIX)

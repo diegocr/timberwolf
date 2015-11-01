@@ -149,7 +149,7 @@
 	|| defined(HPUX) || defined(FREEBSD) \
 	|| defined(NETBSD) || defined(OPENBSD) || defined(BSDI) \
 	|| defined(NTO) || defined(DARWIN) \
-	|| defined(UNIXWARE) || defined(RISCOS)	|| defined(SYMBIAN)
+	|| defined(UNIXWARE) || defined(RISCOS)	|| defined(SYMBIAN) || defined(__amigaos4__)
 #ifdef __GNU__
 /* Hurd pthreads don't have an invalid value for pthread_t. -- rmh */
 #error Using Hurd pthreads
@@ -206,7 +206,7 @@
 	|| defined(LINUX) || defined(__GNU__)|| defined(__GLIBC__) \
 	|| defined(FREEBSD) || defined(NETBSD) || defined(OPENBSD) \
 	|| defined(BSDI) || defined(UNIXWARE) \
-	|| defined(DARWIN) || defined(SYMBIAN)
+	|| defined(DARWIN) || defined(SYMBIAN) || defined(__amigaos__)
 #define PT_NO_SIGTIMEDWAIT
 #endif
 
@@ -265,6 +265,9 @@
 	|| defined(RISCOS) /* XXX */
 #define PT_PRIO_MIN            0
 #define PT_PRIO_MAX            126
+#elif defined(__amigaos4__)
+#define PT_PRIO_MIN            0
+#define PT_PRIO_MAX            31
 #else
 #error "pthreads is not supported for this architecture"
 #endif
@@ -299,6 +302,8 @@ extern int (*_PT_aix_yield_fcn)();
 	|| defined(BSDI) || defined(NTO) || defined(DARWIN) \
 	|| defined(UNIXWARE) || defined(RISCOS) || defined(SYMBIAN)
 #define _PT_PTHREAD_YIELD()            	sched_yield()
+#elif defined(__amigaos4__)
+#define _PT_PTHREAD_YIELD()
 #else
 #error "Need to define _PT_PTHREAD_YIELD for this platform"
 #endif

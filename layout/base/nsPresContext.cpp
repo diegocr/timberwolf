@@ -2298,6 +2298,18 @@ static PRUint32 sInterruptChecksToSkip = 200;
 // GECKO_REFLOW_MIN_NOINTERRUPT_DURATION env var.
 static TimeDuration sInterruptTimeout = TimeDuration::FromMilliseconds(100);
 
+#ifdef XP_AMIGAOS
+long int random()
+{
+	return rand();
+}
+
+void srandom(unsigned int seed)
+{
+	srand(seed);
+}
+#endif
+
 static void GetInterruptEnv()
 {
   char *ev = PR_GetEnv("GECKO_REFLOW_INTERRUPT_MODE");
